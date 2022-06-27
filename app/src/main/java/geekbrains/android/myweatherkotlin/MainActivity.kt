@@ -21,13 +21,41 @@ class MainActivity : AppCompatActivity() {
                 val second_student = first_student.copy()
                 //tv_start.setText("First student: " + first_student.toString() + "\nSecond student (копия): " + second_student.toString()) Интересно студия предлагает вот это все заменить. Непривычно
                 tv_start.setText("First student: $first_student\nSecond student (копия): $second_student")
-
+                checkIf()
+                checWhen()
             }
 
         })
     }
 
+    fun checkIf() {
+        val masIf = 1..1000
+        val numIf = 100
+        if (numIf in masIf) {
+            Log.d("My_Log", "True")
+        } else {
+            Log.d("My_Log", "False")
+        }
+    }
 
+    fun checWhen() {
+        val numWhen = 42
+        val result = when (numWhen) {
+            1 -> Log.d("My_Log", "Ты избранный!")
+            3 -> Log.d("My_Log", "Один за всех и все за одного!")
+            12 -> Log.d("My_Log", "Лед тронулся, господа присяжные заседатели, лед тронулся!")
+            42 -> Log.d("My_Log", "Вот и ответ на Основной вопрос жизни, Вселенной и всего остального")
+            451 -> Log.d("My_Log", "Похоже, что бумага притакой температуре по Фаренгейту не воспламеняется")
+            1984 -> Log.d("My_Log", "Большой Брат следит за тобой!")
+            else -> {
+                Log.d("My_Log", "Увы")
+            }
+        }
+    }
+
+    fun cycles() {
+        val colorMemories = listOf("", "", ) //Продолжаем задание по циклам
+    }
 }
 
 /*
