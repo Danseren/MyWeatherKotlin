@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
                 tv_start.setText("First student: $first_student\nSecond student (копия): $second_student")
                 checkIf()
                 checWhen()
+                cycles()
             }
 
         })
@@ -54,7 +55,58 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun cycles() {
-        val colorMemories = listOf("", "", ) //Продолжаем задание по циклам
+        val colorMemories = listOf("Каждый", "Охотник", "Желает", "Знать", "Где", "Сидит", "Фазан")
+
+        Log.d("My_Log", "*** Цикл For each ***")
+        colorMemories.forEach() {
+            Log.d("My_Log", "$it")
+        }
+
+        Log.d("My_Log", "*** Repeat ***")
+        repeat(colorMemories.size) {
+            Log.d("My_Log", colorMemories[it])
+        }
+
+        Log.d("My_Log", "*** For №1 ***")
+        for (i in colorMemories.indices) {
+            Log.d("My_Log", colorMemories[i])
+        }
+
+        Log.d("My_Log", "*** For №2 ***")
+        for (i in colorMemories) {
+            Log.d("My_Log", i)
+        }
+
+        Log.d("My_Log", "*** For №3 ***")
+        for (i in 0..colorMemories.size-1) {
+            Log.d("My_Log", colorMemories[i])
+        }
+
+        Log.d("My_Log", "*** For №4 ***")
+        for (i in 0 until colorMemories.size) {
+            Log.d("My_Log", colorMemories[i])
+        }
+
+        Log.d("My_Log", "*** For revers ***")
+        for (i in colorMemories.size-1 downTo 0) {
+            Log.d("My_Log", colorMemories[i])
+        }
+
+        Log.d("My_Log", "*** For with step ***")
+        for (i in 0..colorMemories.size-1 step 2) {
+            Log.d("My_Log", colorMemories[i])
+        }
+
+        Log.d("My_Log", "*** While ***")
+        var count = colorMemories.size
+        while (--count > 0) {
+            Log.d("My_Log", colorMemories[count])
+        }
+
+        Log.d("My_Log", "*** Do While ***")
+        do {
+            Log.d("My_Log", colorMemories[count])
+        } while (++count < 7)
     }
 }
 
@@ -67,7 +119,7 @@ class MainActivity : AppCompatActivity() {
 Потренироваться в создании классов и функций, описанных в уроке, и убедиться, что всё работает. Например, создать тестовое приложение:
     Сформировать data class с двумя свойствами и вывести их на экран приложения.
     Создать объект класса из предыдущего пункта, в этом бъекте вызвать copy и вывести значения скопированного класса на экран (Создать Object. В Object вызвать copy и вывести значения скопированного класса на экран).
-Вывести значения из разных циклов в консоль, используя примеры из методических материалов.
+    Вывести значения из разных циклов в консоль, используя примеры из методических материалов.
 Изучить API погоды «Яндекса», посмотреть примеры и зарегистрироваться в качестве разработчика, получить свой ключ разработчика.
 Изучить API КиноПоиска и зарегистрироваться в качестве разработчика, подключиться к API.
 Определиться с экранами и инструментарием своего будущего приложения с фильмами на основе возможностей API.
