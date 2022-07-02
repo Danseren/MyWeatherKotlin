@@ -1,6 +1,6 @@
 package geekbrains.android.myweatherkotlin.lesson3
 
-object Lesson3 {
+object Lesson3: TestableKotlin {
 
     //Сделав изначально всё с val, потом подвисаешь на непонятной ошибке,
     // но потом поменяв на var понимаешь, что так же и сдругим программистом сработает, если он захочет  поменять что-нибудь
@@ -12,6 +12,36 @@ object Lesson3 {
 //    init {
 //        testKotlin = Test()
 //    }
+
+//    fun startLessonInterface() {
+//        val callbackJava = TestableJava {  }
+//    }
+
+    fun startLessonColections() {
+        fooAdv()
+        val phraseArray = arrayOf("Каждый ", "выбирает ", "для ", "себя")
+        var phraseList = listOf("Каждый ", "выбирает ", "для ", "себя")
+        val numList = listOf(42, 3, 20000, 451, 1984, 100)
+        val phraseListMutable = mutableListOf("Каждый ", "выбирает ", "для ", "себя")
+        val phraseMap = mapOf(1 to "one", 2 to "two", 3 to "three")
+
+        //phraseList = phraseList.toMutableList()
+        phraseListMutable.add("")
+        phraseListMutable.removeAt(2)
+
+        val newFilteredPhraseList = phraseList.filter { it.length > 4 }
+        val newList = phraseList.map { "$it" }
+        val newFilteredNumList = numList.sorted()
+        val first = numList.first()
+        val last = numList.last()
+
+        val location = Pair(first, last)
+        location.first
+        location.second
+        val locationAnotherOne = first to last
+        locationAnotherOne.first
+        locationAnotherOne.second
+    }
 
     fun startLesson() {
 
@@ -53,4 +83,12 @@ object Lesson3 {
             testKotlin = testJava
         }
     }
+
+    override fun foo() {
+        TODO("Not yet implemented")
+    }
+
+    override var field: String
+        get() = TODO("Not yet implemented")
+        set(value) {}
 }

@@ -16,3 +16,7 @@ public class Test {
         return "";
     }
 }
+
+interface TestableJava {
+    void foo();
+}
