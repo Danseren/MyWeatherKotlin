@@ -4,15 +4,14 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import geekbrains.android.myweatherkotlin.model.Repository
-import geekbrains.android.myweatherkotlin.model.RepositoryLocalImpl
-import geekbrains.android.myweatherkotlin.model.RepositoryRemoteImpl
+import geekbrains.android.myweatherkotlin.model.*
 import java.lang.Thread.sleep
 import kotlin.random.Random
 
 class WeatherListViewModel(private val liveData: MutableLiveData<AppState> = MutableLiveData<AppState>()) : ViewModel() {
 
-    lateinit var repository: Repository
+    lateinit var repositoryMulti: RepositoryMulti
+    lateinit var repositorySingle: RepositorySingle
 
     fun getLiveData(): MutableLiveData<AppState> {
         choiceRepository()
@@ -20,14 +19,23 @@ class WeatherListViewModel(private val liveData: MutableLiveData<AppState> = Mut
     }
 
     private fun choiceRepository() {
-        repository = if (isConnection()) {
+        repositorySingle = if (isConnection()) {
             RepositoryRemoteImpl()
         } else {
             RepositoryLocalImpl()
         }
+        repositoryMulti = RepositoryLocalImpl()
     }
 
-    fun sentRequest() {
+    fun getWeatherListForRussia() {
+        sentRequest(CityLocation.Russia)
+    }
+
+    fun getWeatherListForEurope() {
+        sentRequest(CityLocation.Europe)
+    }
+
+    fun sentRequest(location: CityLocation) {
 
         liveData.value = AppState.Loading
         val rand = (0..3).random(Random(System.nanoTime()))
@@ -39,13 +47,13 @@ class WeatherListViewModel(private val liveData: MutableLiveData<AppState> = Mut
                     Log.d("My_Log", "OK?!")
                 }
         } else if (rand == 2){
-            liveData.postValue(AppState.Success(repository.getWeather(55.755826, 37.617299900000035)))
+            liveData.postValue(AppState.SuccessMulti(repositoryMulti.getListWeather(location)))
             //Не пойму почему в логах прописывается и Loading и Success
         } else {
             liveData.value = AppState.Loading
             Thread {
                 sleep(2000L)
-                liveData.postValue(AppState.Success(repository.getWeather(55.755826, 37.617299900000035)))
+                liveData.postValue(AppState.SuccessMulti(repositoryMulti.getListWeather(location)))
             }.start()
         }
     }

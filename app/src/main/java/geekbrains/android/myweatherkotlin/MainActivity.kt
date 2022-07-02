@@ -15,10 +15,6 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        //binding.btnGo.text = "Is it a success?"
-
-        //Lesson3.startLessonColections()
-        Lesson3.startLessonGeneric()
 
         //Напоминание для себя
         //val tvStart:TextView = findViewById<TextView>(R.id.tv_start) Исправил tv_start  на tvStart
@@ -32,7 +28,3 @@ class MainActivity : AppCompatActivity() {
     }
 
 }
-/*
-Воспользуйтесь ViewBinding в своём проекте.
-Добавьте в приложение рандомизатор, который будет возвращать разный результат загрузки данных: успех или ошибку. Обработайте ошибки загрузки.
- */

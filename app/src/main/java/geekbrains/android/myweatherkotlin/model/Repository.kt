@@ -2,7 +2,15 @@ package geekbrains.android.myweatherkotlin.model
 
 import geekbrains.android.myweatherkotlin.domain.Weather
 
-interface Repository {
-    fun getListWeather(): List<Weather>
-    fun getWeather(latitude: Double, longitude: Double): Weather
+fun interface RepositorySingle{
+    fun getWeather(lat: Double, lin: Double): Weather
+}
+
+fun interface RepositoryMulti{
+    fun getListWeather(location: CityLocation): List<Weather>
+}
+
+sealed class CityLocation{
+    object Russia: CityLocation()
+    object Europe: CityLocation()
 }

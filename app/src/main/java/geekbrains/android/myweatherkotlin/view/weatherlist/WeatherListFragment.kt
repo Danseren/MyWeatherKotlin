@@ -9,15 +9,21 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import geekbrains.android.myweatherkotlin.R
 import geekbrains.android.myweatherkotlin.databinding.FragmentWeatherListBinding
+import geekbrains.android.myweatherkotlin.details.DetailsFragment
+import geekbrains.android.myweatherkotlin.details.OnItemClick
+import geekbrains.android.myweatherkotlin.domain.Weather
 import geekbrains.android.myweatherkotlin.viewmodel.AppState
 import geekbrains.android.myweatherkotlin.viewmodel.WeatherListViewModel
 
-class WeatherListFragment : Fragment() {
+class WeatherListFragment : Fragment(), OnItemClick {
 
     companion object {
         fun newInstance() = WeatherListFragment()
     }
+
+    var isRussian = true
 
     private var _binding: FragmentWeatherListBinding? = null
     private val binding: FragmentWeatherListBinding
@@ -38,7 +44,6 @@ class WeatherListFragment : Fragment() {
     ): View? {
         _binding = FragmentWeatherListBinding.inflate(inflater)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -49,7 +54,18 @@ class WeatherListFragment : Fragment() {
                 renderData(t)
             }
         })
-        viewModel.sentRequest()
+
+        binding.weatherListFragmentFAB.setOnClickListener {
+            isRussian = !isRussian
+            if (isRussian) {
+                viewModel.getWeatherListForRussia()
+                binding.weatherListFragmentFAB.setImageResource(R.drawable.ic_europe)
+            } else {
+                viewModel.getWeatherListForEurope()
+                binding.weatherListFragmentFAB.setImageResource(R.drawable.ic_russia)
+            }
+        }
+        viewModel.getWeatherListForRussia()
     }
 
     private fun renderData(appState: AppState) {
@@ -58,14 +74,22 @@ class WeatherListFragment : Fragment() {
             //Особенно не понятно почему при Error в логи так ничего и не выводится
             is AppState.Error -> Log.d("My_Log", "Error")
             AppState.Loading -> Log.d("My_Log", "Loading")
-            is AppState.Success -> {
+            is AppState.SuccessSingle -> {
                 val result = appState.weatherData
-                binding.tvCityName.text = result.city.name
-                binding.tvTemperatureValue.text = result.temperature.toString()
-                binding.tvFeelsLikeValue.text = result.feelsLike.toString()
-                binding.tvCityCoordinates.text = "Широта:  ${result.city.latitude}\nДолгота: ${result.city.longitude}"
                 Log.d("My_Log", "Success")
             }
+            is AppState.SuccessMulti -> {
+                binding.mainFragmentRecyclerView.adapter = WeatherListAdapter(appState.weatherList, this)
+            }
         }
+    }
+
+    override fun onItemClick(weather: Weather) {
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+            .hide(this)
+            .add(R.id.container, DetailsFragment.newInstance(weather))
+            .addToBackStack("")
+            .commit()
     }
 }
