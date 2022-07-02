@@ -1,5 +1,8 @@
 package geekbrains.android.myweatherkotlin.lesson3
 
+import android.util.Log
+import android.view.ViewGroup
+
 object Lesson3: TestableKotlin {
 
     //Сделав изначально всё с val, потом подвисаешь на непонятной ошибке,
@@ -16,6 +19,48 @@ object Lesson3: TestableKotlin {
 //    fun startLessonInterface() {
 //        val callbackJava = TestableJava {  }
 //    }
+
+    fun startLessonGeneric() {
+        val startList: List<*>
+        startList = listOf<String>("Каждый ", "выбирает ", "для ", "себя")
+        val phraseList = listOf<String>("Каждый ", "выбирает ", "для ", "себя")
+        val numList = listOf<Int>(42, 3, 20000, 451, 1984, 100)
+        val tesList = listOf<Test>(Test(), Test(), Test())
+
+        someGeneric("")
+        someGeneric(Test())
+        someGeneric(1.0)
+
+        var uniLink: Producer<Any>
+
+        val producerTest = Producer<Test>()
+        val producerString = Producer<String>()
+
+        uniLink = producerTest
+        uniLink = producerString
+        uniLink.producer()
+    }
+
+    class Producer<out T> {
+        private val list: List<T> = listOf<T>()
+        fun producer(): List<T> {
+            return list
+        }
+    }
+
+    class Consume<in T> {
+        fun consume(input: T) {
+
+        }
+    }
+
+    private fun <MyT> someGeneric(input: MyT) {
+        Log.d("My_Log", input.toString())
+    }
+
+    fun <V: ViewGroup> someGenericView(input: V) {
+        Log.d("My_Log", input.toString())
+    }
 
     fun startLessonColections() {
         fooAdv()

@@ -17,7 +17,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         //binding.btnGo.text = "Is it a success?"
 
-        Lesson3.startLessonColections()
+        //Lesson3.startLessonColections()
+        Lesson3.startLessonGeneric()
 
         //Напоминание для себя
         //val tvStart:TextView = findViewById<TextView>(R.id.tv_start) Исправил tv_start  на tvStart
