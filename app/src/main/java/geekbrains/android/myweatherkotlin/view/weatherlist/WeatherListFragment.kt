@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.Snackbar
 import geekbrains.android.myweatherkotlin.R
 import geekbrains.android.myweatherkotlin.databinding.FragmentWeatherListBinding
 import geekbrains.android.myweatherkotlin.details.DetailsFragment
@@ -69,9 +70,17 @@ class WeatherListFragment : Fragment(), OnItemClick {
 
     private fun renderData(appState: AppState) {
         when (appState) {
-            //Не разобрался до конца, что надо здесь выводить при Error и при Loading
-            //Особенно не понятно почему при Error в логи так ничего и не выводится
-            is AppState.Error -> Log.d("My_Log", "Error")
+
+            is AppState.Error -> {
+                Log.d("My_Log", "Error")
+                binding.root.homeWorkSnackbar("Ошибка", Snackbar.LENGTH_LONG, "Очередная попытка") { v: View ->
+                    if (isRussian) {
+                        viewModel.getWeatherListForRussia()
+                    } else {
+                        viewModel.getWeatherListForEurope()
+                    }
+                }
+            }
             AppState.Loading -> Log.d("My_Log", "Loading")
             is AppState.SuccessSingle -> {
                 val result = appState.weatherData
@@ -81,6 +90,10 @@ class WeatherListFragment : Fragment(), OnItemClick {
                 binding.mainFragmentRecyclerView.adapter = WeatherListAdapter(appState.weatherList, this)
             }
         }
+    }
+
+    fun View.homeWorkSnackbar(string: String, duration: Int, actionString: String, block: (v: View) -> Unit) {
+        Snackbar.make(this, string, duration).setAction(actionString, block).show()
     }
 
     override fun onItemClick(weather: Weather) {
