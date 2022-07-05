@@ -81,7 +81,13 @@ class WeatherListFragment : Fragment(), OnItemClick {
                     }
                 }
             }
-            AppState.Loading -> Log.d("My_Log", "Loading")
+            AppState.Loading -> {
+                Log.d("My_Log", "Loading")
+
+                //работа функции высшего порядка
+                Log.d("My_Log", mathSum(10) {it * it}.toString())
+                Log.d("My_Log", mathSum(10, ::fibonacci).toString())
+            }
             is AppState.SuccessSingle -> {
                 val result = appState.weatherData
                 Log.d("My_Log", "Success")
@@ -104,4 +110,28 @@ class WeatherListFragment : Fragment(), OnItemClick {
             .addToBackStack("")
             .commit()
     }
+
+    //Осталось разобраться с функцией высшего порядка из урока
+    //private fun superHighOrderFunction(block: (int: Int, int2: Int, str: String) -> Double): (int: Int, str: String) -> String { // TODO HW придумать, где такое использовать
+    //Ничего толком не придума и полез в интернет
+    //Там в основном работа как пример таких функций это работа со списками и разные математические задачи
+    //Вроде такого
+    fun mathSum(length: Int, series: (Int) -> Int): Int {
+        var result = 0
+        for (i in 0..length) {
+            result += series(i)
+        }
+        return result
+    }
+
+    fun fibonacci(number: Int): Int {
+        if (number <= 0) {
+            return 0
+        }
+        if (number == 1 || number == 2) {
+            return 1
+        }
+        return fibonacci(number - 1) + fibonacci(number - 2)
+    }
+
 }
