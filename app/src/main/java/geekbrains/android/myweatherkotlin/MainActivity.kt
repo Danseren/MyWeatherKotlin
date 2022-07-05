@@ -1,9 +1,8 @@
 package geekbrains.android.myweatherkotlin
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import geekbrains.android.myweatherkotlin.databinding.ActivityMainBinding
-import geekbrains.android.myweatherkotlin.lesson3.Lesson3
 import geekbrains.android.myweatherkotlin.view.weatherlist.WeatherListFragment
 
 class MainActivity : AppCompatActivity() {
@@ -17,6 +16,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         //Напоминание для себя
+        //Ctrl + Alt + O
+        //Ctrl + Alt + L
+        //trl + Shift + U
         //val tvStart:TextView = findViewById<TextView>(R.id.tv_start) Исправил tv_start  на tvStart
         //tvStart.text = ("First student: $first_student\nSecond student (копия): $second_student") Исправил tvStart.setText() на tvStart.text = ()
 

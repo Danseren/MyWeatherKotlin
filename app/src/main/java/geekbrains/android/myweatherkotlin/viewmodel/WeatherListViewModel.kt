@@ -1,7 +1,6 @@
 package geekbrains.android.myweatherkotlin.viewmodel
 
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import geekbrains.android.myweatherkotlin.model.*
@@ -42,7 +41,7 @@ class WeatherListViewModel(private val liveData: MutableLiveData<AppState> = Mut
         Log.d("My_Log", rand.toString())
         if (rand == 3) {
                 try {
-                    liveData.postValue(AppState.Error(throw IllegalStateException("Что-то пошлло не так")))
+                    liveData.postValue(AppState.Error(IllegalStateException("Что-то пошлло не так")))
                 } catch (e : IllegalStateException) {
                     Log.d("My_Log", "OK?!")
                 }
