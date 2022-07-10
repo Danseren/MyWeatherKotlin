@@ -3,6 +3,7 @@ package geekbrains.android.myweatherkotlin.utils
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.google.gson.Gson
+import geekbrains.android.myweatherkotlin.BuildConfig
 import geekbrains.android.myweatherkotlin.model.dto.WeatherDTO
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -19,7 +20,7 @@ object WeatherLoader {
 
         myConnection = uri.openConnection() as HttpURLConnection
         myConnection.readTimeout = 5000
-        myConnection.addRequestProperty("X-Yandex-API-Key","ceae3d76-b634-4bfd-8ef5-25a327758ae9") //Это Ваш ключ, надо же сделать Commit, что бы не спалить свой ключ
+        myConnection.addRequestProperty("X-Yandex-API-Key", BuildConfig.WEATHER_API_KEY)
         Thread{
             val reader = BufferedReader(InputStreamReader(myConnection.inputStream))
             val weatherDTO = Gson().fromJson(getLines(reader), WeatherDTO :: class.java)

@@ -111,11 +111,6 @@ class WeatherListFragment : Fragment(), OnItemClick {
             .commit()
     }
 
-    //Осталось разобраться с функцией высшего порядка из урока
-    //private fun superHighOrderFunction(block: (int: Int, int2: Int, str: String) -> Double): (int: Int, str: String) -> String { // TODO HW придумать, где такое использовать
-    //Ничего толком не придума и полез в интернет
-    //Там в основном работа как пример таких функций это работа со списками и разные математические задачи
-    //Вроде такого
     fun mathSum(length: Int, series: (Int) -> Int): Int {
         var result = 0
         for (i in 0..length) {
