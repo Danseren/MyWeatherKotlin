@@ -1,12 +1,16 @@
 package geekbrains.android.myweatherkotlin.details
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import geekbrains.android.myweatherkotlin.databinding.FragmentDetailsBinding
 import geekbrains.android.myweatherkotlin.domain.Weather
+import geekbrains.android.myweatherkotlin.model.dto.WeatherDTO
+import geekbrains.android.myweatherkotlin.utils.WeatherLoader
 
 class DetailsFragment : Fragment() {
 
@@ -30,13 +34,26 @@ class DetailsFragment : Fragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val weather = arguments?.let { arg ->
             arg.getParcelable<Weather>(BUNDLE_WEATHER_EXTRA)
         }
-        if (weather != null) renderData(weather)
+        weather?.let { weatherLocal ->
+            WeatherLoader.request(
+                weatherLocal.city.latitude,
+                weatherLocal.city.longitude
+            ) { weatherDTO ->
+                requireActivity().runOnUiThread{
+                    renderData(weatherLocal.apply {
+                        weatherLocal.feelsLike = weatherDTO.fact.feelsLike
+                        weatherLocal.temperature = weatherDTO.fact.temp
+                    })
+                }
+            }
+        }
     }
 
     private fun renderData(weather: Weather) {
