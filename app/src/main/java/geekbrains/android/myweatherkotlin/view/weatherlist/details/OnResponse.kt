@@ -1,4 +1,4 @@
-package geekbrains.android.myweatherkotlin.details
+package geekbrains.android.myweatherkotlin.view.weatherlist.details
 
 import geekbrains.android.myweatherkotlin.model.dto.WeatherDTO
 

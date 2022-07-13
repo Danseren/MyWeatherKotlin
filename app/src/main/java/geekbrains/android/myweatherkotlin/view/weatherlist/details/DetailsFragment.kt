@@ -1,4 +1,4 @@
-package geekbrains.android.myweatherkotlin.details
+package geekbrains.android.myweatherkotlin.view.weatherlist.details
 
 import android.os.Build
 import android.os.Bundle
@@ -9,7 +9,6 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import geekbrains.android.myweatherkotlin.databinding.FragmentDetailsBinding
 import geekbrains.android.myweatherkotlin.domain.Weather
-import geekbrains.android.myweatherkotlin.model.dto.WeatherDTO
 import geekbrains.android.myweatherkotlin.utils.WeatherLoader
 
 class DetailsFragment : Fragment() {

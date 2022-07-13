@@ -1,4 +1,4 @@
-package geekbrains.android.myweatherkotlin.view.weatherlist
+package geekbrains.android.myweatherkotlin.view.weatherlist.weatherlist
 
 import android.os.Bundle
 import android.util.Log
@@ -11,8 +11,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import geekbrains.android.myweatherkotlin.R
 import geekbrains.android.myweatherkotlin.databinding.FragmentWeatherListBinding
-import geekbrains.android.myweatherkotlin.details.DetailsFragment
-import geekbrains.android.myweatherkotlin.details.OnItemClick
+import geekbrains.android.myweatherkotlin.view.weatherlist.details.DetailsFragment
+import geekbrains.android.myweatherkotlin.view.weatherlist.details.OnItemClick
 import geekbrains.android.myweatherkotlin.domain.Weather
 import geekbrains.android.myweatherkotlin.viewmodel.AppState
 import geekbrains.android.myweatherkotlin.viewmodel.WeatherListViewModel
