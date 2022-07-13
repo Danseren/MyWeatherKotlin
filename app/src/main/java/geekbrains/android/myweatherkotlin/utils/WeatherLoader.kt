@@ -7,6 +7,7 @@ import geekbrains.android.myweatherkotlin.BuildConfig
 import geekbrains.android.myweatherkotlin.model.dto.WeatherDTO
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -16,15 +17,20 @@ object WeatherLoader {
     fun request(lat: Double, lon: Double, block: (weather: WeatherDTO) -> Unit) {
 
         val uri = URL("https://api.weather.yandex.ru/v2/informers?lat=${lat}&lon=${lon}")
-        var myConnection: HttpURLConnection? = null
 
-        myConnection = uri.openConnection() as HttpURLConnection
-        myConnection.readTimeout = 5000
-        myConnection.addRequestProperty("X-Yandex-API-Key", BuildConfig.WEATHER_API_KEY)
-        Thread{
-            val reader = BufferedReader(InputStreamReader(myConnection.inputStream))
-            val weatherDTO = Gson().fromJson(getLines(reader), WeatherDTO :: class.java)
-            block(weatherDTO)
+        Thread {
+            var myConnection: HttpURLConnection? = null
+            myConnection = uri.openConnection() as HttpURLConnection
+            try {
+                myConnection.readTimeout = 5000
+                myConnection.addRequestProperty(YANDEX_API_KEY, BuildConfig.WEATHER_API_KEY)
+                val reader = BufferedReader(InputStreamReader(myConnection.inputStream))
+                val weatherDTO = Gson().fromJson(getLines(reader), WeatherDTO :: class.java)
+                block(weatherDTO)
+            } catch (e : Exception) {
+            } finally {
+                myConnection.disconnect()
+            }
         }.start()
     }
 }
