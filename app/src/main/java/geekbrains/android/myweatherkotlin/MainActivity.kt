@@ -1,6 +1,12 @@
 package geekbrains.android.myweatherkotlin
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import geekbrains.android.myweatherkotlin.databinding.ActivityMainBinding
 import geekbrains.android.myweatherkotlin.view.weatherlist.weatherlist.WeatherListFragment
@@ -27,6 +33,33 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.container, WeatherListFragment.newInstance())
                 .commit()
         }
+
+        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(networkStateReceiver, filter)
     }
 
+    private var networkStateReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val noConnection =
+                intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false)
+            if (!noConnection) {
+                onConnectionFound()
+            } else {
+                onConnectionLost()
+            }
+        }
+    }
+
+    fun onConnectionFound() {
+        Toast.makeText(this, "Connection found", Toast.LENGTH_LONG).show()
+    }
+
+    fun onConnectionLost() {
+        Toast.makeText(this, "Connection lost", Toast.LENGTH_LONG).show()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(networkStateReceiver)
+    }
 }
