@@ -2,7 +2,7 @@ package geekbrains.android.myweatherkotlin.model
 
 import geekbrains.android.myweatherkotlin.domain.Weather
 
-class RepositoryRemoteImpl: RepositorySingle {
+class RepositoryRemoteImpl : RepositorySingle {
 //    override fun getListWeather(): List<Weather> {
 //        return listOf(Weather())
 //    }

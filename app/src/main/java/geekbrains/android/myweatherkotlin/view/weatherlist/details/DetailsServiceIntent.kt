@@ -23,7 +23,8 @@ class DetailsServiceIntent : IntentService("") {
         intent?.let {
             it.getParcelableExtra<City>(BUNDLE_CITY_KEY)?.let {
 
-                val uri = URL("https://api.weather.yandex.ru/v2/informers?lat=${it.latitude}&lon=${it.longitude}")
+                val uri =
+                    URL("https://api.weather.yandex.ru/v2/informers?lat=${it.latitude}&lon=${it.longitude}")
 
                 Thread {
                     var myConnection: HttpURLConnection? = null
@@ -32,12 +33,12 @@ class DetailsServiceIntent : IntentService("") {
                         myConnection.readTimeout = 5000
                         myConnection.addRequestProperty(YANDEX_API_KEY, BuildConfig.WEATHER_API_KEY)
                         val reader = BufferedReader(InputStreamReader(myConnection.inputStream))
-                        val weatherDTO = Gson().fromJson(getLines(reader), WeatherDTO :: class.java)
+                        val weatherDTO = Gson().fromJson(getLines(reader), WeatherDTO::class.java)
                         LocalBroadcastManager.getInstance(this).sendBroadcast(Intent().apply {
                             putExtra(BUNDLE_WEATHER_DTO_KEY, weatherDTO)
                             action = WAVE
                         })
-                    } catch (e : Exception) {
+                    } catch (e: Exception) {
                     } finally {
                         myConnection.disconnect()
                     }

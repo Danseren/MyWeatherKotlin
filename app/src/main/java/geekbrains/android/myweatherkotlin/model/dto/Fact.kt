@@ -35,4 +35,4 @@ data class Fact(
     val windGust: Double,
     @SerializedName("wind_speed")
     val windSpeed: Double
-): Parcelable
+) : Parcelable

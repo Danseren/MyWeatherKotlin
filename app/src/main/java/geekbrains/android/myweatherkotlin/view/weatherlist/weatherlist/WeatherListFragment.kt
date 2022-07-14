@@ -27,9 +27,9 @@ class WeatherListFragment : Fragment(), OnItemClick {
 
     private var _binding: FragmentWeatherListBinding? = null
     private val binding: FragmentWeatherListBinding
-    get() {
-        return _binding!!
-    }
+        get() {
+            return _binding!!
+        }
     lateinit var viewModel: WeatherListViewModel
 
     override fun onDestroy() {
@@ -49,7 +49,7 @@ class WeatherListFragment : Fragment(), OnItemClick {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(WeatherListViewModel::class.java)
-        viewModel.getLiveData().observe(viewLifecycleOwner, object : Observer<AppState>{
+        viewModel.getLiveData().observe(viewLifecycleOwner, object : Observer<AppState> {
             override fun onChanged(t: AppState) {
                 renderData(t)
             }
@@ -73,7 +73,11 @@ class WeatherListFragment : Fragment(), OnItemClick {
 
             is AppState.Error -> {
                 Log.d("My_Log", "Error")
-                binding.root.homeWorkSnackbar("Ошибка", Snackbar.LENGTH_LONG, "Очередная попытка") { v: View ->
+                binding.root.homeWorkSnackbar(
+                    "Ошибка",
+                    Snackbar.LENGTH_LONG,
+                    "Очередная попытка"
+                ) { v: View ->
                     if (isRussian) {
                         viewModel.getWeatherListForRussia()
                     } else {
@@ -85,7 +89,7 @@ class WeatherListFragment : Fragment(), OnItemClick {
                 Log.d("My_Log", "Loading")
 
                 //работа функции высшего порядка
-                Log.d("My_Log", mathSum(10) {it * it}.toString())
+                Log.d("My_Log", mathSum(10) { it * it }.toString())
                 Log.d("My_Log", mathSum(10, ::fibonacci).toString())
             }
             is AppState.SuccessSingle -> {
@@ -93,12 +97,18 @@ class WeatherListFragment : Fragment(), OnItemClick {
                 Log.d("My_Log", "Success")
             }
             is AppState.SuccessMulti -> {
-                binding.mainFragmentRecyclerView.adapter = WeatherListAdapter(appState.weatherList, this)
+                binding.mainFragmentRecyclerView.adapter =
+                    WeatherListAdapter(appState.weatherList, this)
             }
         }
     }
 
-    fun View.homeWorkSnackbar(string: String, duration: Int, actionString: String, block: (v: View) -> Unit) {
+    fun View.homeWorkSnackbar(
+        string: String,
+        duration: Int,
+        actionString: String,
+        block: (v: View) -> Unit
+    ) {
         Snackbar.make(this, string, duration).setAction(actionString, block).show()
     }
 

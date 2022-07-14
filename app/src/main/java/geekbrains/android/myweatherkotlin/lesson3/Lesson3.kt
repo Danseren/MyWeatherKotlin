@@ -3,7 +3,7 @@ package geekbrains.android.myweatherkotlin.lesson3
 import android.util.Log
 import android.view.ViewGroup
 
-object Lesson3: TestableKotlin {
+object Lesson3 : TestableKotlin {
 
     //Сделав изначально всё с val, потом подвисаешь на непонятной ошибке,
     // но потом поменяв на var понимаешь, что так же и сдругим программистом сработает, если он захочет  поменять что-нибудь
@@ -58,7 +58,7 @@ object Lesson3: TestableKotlin {
         Log.d("My_Log", input.toString())
     }
 
-    fun <V: ViewGroup> someGenericView(input: V) {
+    fun <V : ViewGroup> someGenericView(input: V) {
         Log.d("My_Log", input.toString())
     }
 

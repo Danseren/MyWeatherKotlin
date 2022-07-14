@@ -23,4 +23,4 @@ data class Forecast(
     val sunset: String,
     @SerializedName("week")
     val week: Int
-): Parcelable
+) : Parcelable
