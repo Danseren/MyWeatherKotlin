@@ -16,9 +16,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         //Напоминание для себя
-        //Ctrl + Alt + O
-        //Ctrl + Alt + L
-        //Ctrl + shift + U
+        //Ctrl + Alt + O        Optimize imports
+        //Ctrl + Alt + L        Reformat code
+        //Ctrl + shift + U      upper/lower case
         //val tvStart:TextView = findViewById<TextView>(R.id.tv_start) Исправил tv_start  на tvStart
         //tvStart.text = ("First student: $first_student\nSecond student (копия): $second_student") Исправил tvStart.setText() на tvStart.text = ()
 
