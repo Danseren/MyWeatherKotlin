@@ -1,4 +1,4 @@
-package geekbrains.android.myweatherkotlin.viewmodel
+package geekbrains.android.myweatherkotlin.viewmodel.citieslist
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -7,23 +7,19 @@ import geekbrains.android.myweatherkotlin.model.*
 import java.lang.Thread.sleep
 import kotlin.random.Random
 
-class WeatherListViewModel(private val liveData: MutableLiveData<AppState> = MutableLiveData<AppState>()) : ViewModel() {
+class CitiesListViewModel(private val liveData: MutableLiveData<CityListFragmentAppState> = MutableLiveData<CityListFragmentAppState>()) : ViewModel() {
 
-    lateinit var repositoryMulti: RepositoryMulti
-    lateinit var repositorySingle: RepositorySingle
+    lateinit var repositoryCitiesList: RepositoryCitiesList
+    //lateinit var repositorySingle: RepositorySingle
 
-    fun getLiveData(): MutableLiveData<AppState> {
+    fun getLiveData(): MutableLiveData<CityListFragmentAppState> {
         choiceRepository()
         return liveData
     }
 
     private fun choiceRepository() {
-        repositorySingle = if (isConnection()) {
-            RepositoryRemoteImpl()
-        } else {
-            RepositoryLocalImpl()
-        }
-        repositoryMulti = RepositoryLocalImpl()
+
+        repositoryCitiesList = RepositoryCitiesListImpl()
     }
 
     fun getWeatherListForRussia() {
@@ -36,23 +32,23 @@ class WeatherListViewModel(private val liveData: MutableLiveData<AppState> = Mut
 
     fun sentRequest(location: CityLocation) {
 
-        liveData.value = AppState.Loading
+        liveData.value = CityListFragmentAppState.Loading
         val rand = (0..3).random(Random(System.nanoTime()))
         Log.d("My_Log", rand.toString())
         if (rand == 3) {
                 try {
-                    liveData.postValue(AppState.Error(IllegalStateException("Что-то пошлло не так")))
+                    liveData.postValue(CityListFragmentAppState.Error(IllegalStateException("Что-то пошлло не так")))
                 } catch (e : IllegalStateException) {
                     Log.d("My_Log", "OK?!")
                 }
         } else if (rand == 2){
-            liveData.postValue(AppState.SuccessMulti(repositoryMulti.getListWeather(location)))
+            liveData.postValue(CityListFragmentAppState.SuccessMulti(repositoryCitiesList.getListCities(location)))
             //Не пойму почему в логах прописывается и Loading и Success
         } else {
-            liveData.value = AppState.Loading
+            liveData.value = CityListFragmentAppState.Loading
             Thread {
                 sleep(2000L)
-                liveData.postValue(AppState.SuccessMulti(repositoryMulti.getListWeather(location)))
+                liveData.postValue(CityListFragmentAppState.SuccessMulti(repositoryCitiesList.getListCities(location)))
             }.start()
         }
     }

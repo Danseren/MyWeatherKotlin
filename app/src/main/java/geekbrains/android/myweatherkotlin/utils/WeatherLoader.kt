@@ -5,7 +5,7 @@ import androidx.annotation.RequiresApi
 import com.google.gson.Gson
 import geekbrains.android.myweatherkotlin.BuildConfig
 import geekbrains.android.myweatherkotlin.model.dto.WeatherDTO
-import geekbrains.android.myweatherkotlin.view.weatherlist.details.OnResponse
+import geekbrains.android.myweatherkotlin.view.view.details.OnResponse
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection

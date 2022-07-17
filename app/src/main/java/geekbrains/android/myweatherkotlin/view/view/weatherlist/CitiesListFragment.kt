@@ -1,4 +1,4 @@
-package geekbrains.android.myweatherkotlin.view.weatherlist.weatherlist
+package geekbrains.android.myweatherkotlin.view.view.weatherlist
 
 import android.os.Bundle
 import android.util.Log
@@ -11,16 +11,16 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import geekbrains.android.myweatherkotlin.R
 import geekbrains.android.myweatherkotlin.databinding.FragmentWeatherListBinding
-import geekbrains.android.myweatherkotlin.view.weatherlist.details.DetailsFragment
-import geekbrains.android.myweatherkotlin.view.weatherlist.details.OnItemClick
+import geekbrains.android.myweatherkotlin.view.view.details.DetailsFragment
+import geekbrains.android.myweatherkotlin.view.view.details.OnItemClick
 import geekbrains.android.myweatherkotlin.domain.Weather
-import geekbrains.android.myweatherkotlin.viewmodel.AppState
-import geekbrains.android.myweatherkotlin.viewmodel.WeatherListViewModel
+import geekbrains.android.myweatherkotlin.viewmodel.citieslist.CityListFragmentAppState
+import geekbrains.android.myweatherkotlin.viewmodel.citieslist.CitiesListViewModel
 
-class WeatherListFragment : Fragment(), OnItemClick {
+class CitiesListFragment : Fragment(), OnItemClick {
 
     companion object {
-        fun newInstance() = WeatherListFragment()
+        fun newInstance() = CitiesListFragment()
     }
 
     var isRussian = true
@@ -30,7 +30,7 @@ class WeatherListFragment : Fragment(), OnItemClick {
         get() {
             return _binding!!
         }
-    lateinit var viewModel: WeatherListViewModel
+    lateinit var viewModel: CitiesListViewModel
 
     override fun onDestroy() {
         super.onDestroy()
@@ -48,9 +48,9 @@ class WeatherListFragment : Fragment(), OnItemClick {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(WeatherListViewModel::class.java)
-        viewModel.getLiveData().observe(viewLifecycleOwner, object : Observer<AppState> {
-            override fun onChanged(t: AppState) {
+        viewModel = ViewModelProvider(this).get(CitiesListViewModel::class.java)
+        viewModel.getLiveData().observe(viewLifecycleOwner, object : Observer<CityListFragmentAppState> {
+            override fun onChanged(t: CityListFragmentAppState) {
                 renderData(t)
             }
         })
@@ -68,10 +68,10 @@ class WeatherListFragment : Fragment(), OnItemClick {
         viewModel.getWeatherListForRussia()
     }
 
-    private fun renderData(appState: AppState) {
-        when (appState) {
+    private fun renderData(cityListFragmentAppState: CityListFragmentAppState) {
+        when (cityListFragmentAppState) {
 
-            is AppState.Error -> {
+            is CityListFragmentAppState.Error -> {
                 Log.d("My_Log", "Error")
                 binding.root.homeWorkSnackbar(
                     "Ошибка",
@@ -85,20 +85,20 @@ class WeatherListFragment : Fragment(), OnItemClick {
                     }
                 }
             }
-            AppState.Loading -> {
+            CityListFragmentAppState.Loading -> {
                 Log.d("My_Log", "Loading")
 
                 //работа функции высшего порядка
                 Log.d("My_Log", mathSum(10) { it * it }.toString())
                 Log.d("My_Log", mathSum(10, ::fibonacci).toString())
             }
-            is AppState.SuccessSingle -> {
-                val result = appState.weatherData
+            is CityListFragmentAppState.SuccessSingle -> {
+                val result = cityListFragmentAppState.weatherData
                 Log.d("My_Log", "Success")
             }
-            is AppState.SuccessMulti -> {
+            is CityListFragmentAppState.SuccessMulti -> {
                 binding.mainFragmentRecyclerView.adapter =
-                    WeatherListAdapter(appState.weatherList, this)
+                    DetailsListAdapter(cityListFragmentAppState.weatherList, this)
             }
         }
     }

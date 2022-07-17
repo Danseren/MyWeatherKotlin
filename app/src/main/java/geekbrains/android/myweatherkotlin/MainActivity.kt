@@ -9,7 +9,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import geekbrains.android.myweatherkotlin.databinding.ActivityMainBinding
-import geekbrains.android.myweatherkotlin.view.weatherlist.weatherlist.WeatherListFragment
+import geekbrains.android.myweatherkotlin.view.view.weatherlist.CitiesListFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, WeatherListFragment.newInstance())
+                .replace(R.id.container, CitiesListFragment.newInstance())
                 .commit()
         }
 

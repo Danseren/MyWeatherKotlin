@@ -1,15 +1,15 @@
-package geekbrains.android.myweatherkotlin.view.weatherlist.weatherlist
+package geekbrains.android.myweatherkotlin.view.view.weatherlist
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import geekbrains.android.myweatherkotlin.databinding.FragmentWeatherListRecyclerItemBinding
-import geekbrains.android.myweatherkotlin.view.weatherlist.details.OnItemClick
+import geekbrains.android.myweatherkotlin.view.view.details.OnItemClick
 import geekbrains.android.myweatherkotlin.domain.Weather
 
-class WeatherListAdapter(private val dataList: List<Weather>, private val callback: OnItemClick) :
-    RecyclerView.Adapter<WeatherListAdapter.WeatherViewHolder>() {
+class DetailsListAdapter(private val dataList: List<Weather>, private val callback: OnItemClick) :
+    RecyclerView.Adapter<DetailsListAdapter.WeatherViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder {
         val binding =

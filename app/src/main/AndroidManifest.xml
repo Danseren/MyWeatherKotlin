@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".view.weatherlist.details.DetailsServiceIntent"
+        <service android:name=".view.view.details.DetailsServiceIntent"
             android:exported="true"/>
 
     </application>

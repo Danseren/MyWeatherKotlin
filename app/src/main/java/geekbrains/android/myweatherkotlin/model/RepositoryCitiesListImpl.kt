@@ -4,8 +4,8 @@ import geekbrains.android.myweatherkotlin.domain.Weather
 import geekbrains.android.myweatherkotlin.domain.getEuropeCities
 import geekbrains.android.myweatherkotlin.domain.getRussianCities
 
-class RepositoryLocalImpl : RepositorySingle, RepositoryMulti {
-    override fun getListWeather(location: CityLocation): List<Weather> {
+class RepositoryCitiesListImpl : RepositoryCitiesList {
+    override fun getListCities(location: CityLocation): List<Weather> {
         return when (location) {
             CityLocation.Russia -> {
                 getRussianCities()
@@ -16,7 +16,4 @@ class RepositoryLocalImpl : RepositorySingle, RepositoryMulti {
         }
     }
 
-    override fun getWeather(latitude: Double, longitude: Double): Weather {
-        return Weather()
-    }
 }

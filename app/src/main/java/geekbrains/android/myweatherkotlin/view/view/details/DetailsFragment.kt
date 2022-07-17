@@ -1,4 +1,4 @@
-package geekbrains.android.myweatherkotlin.view.weatherlist.details
+package geekbrains.android.myweatherkotlin.view.view.details
 
 import android.content.BroadcastReceiver
 import android.content.Context
