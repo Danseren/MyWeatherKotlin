@@ -39,6 +39,7 @@ class DetailsServiceIntent : IntentService("") {
                             action = WAVE
                         })
                     } catch (e: Exception) {
+
                     } finally {
                         myConnection.disconnect()
                     }
