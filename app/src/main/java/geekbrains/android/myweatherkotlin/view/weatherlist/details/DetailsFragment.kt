@@ -3,7 +3,6 @@ package geekbrains.android.myweatherkotlin.view.weatherlist.details
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -18,10 +17,10 @@ import geekbrains.android.myweatherkotlin.BuildConfig
 import geekbrains.android.myweatherkotlin.databinding.FragmentDetailsBinding
 import geekbrains.android.myweatherkotlin.domain.Weather
 import geekbrains.android.myweatherkotlin.model.dto.WeatherDTO
-import geekbrains.android.myweatherkotlin.utils.*
-import okhttp3.Call
-import okhttp3.OkHttpClient
-import okhttp3.Request
+import geekbrains.android.myweatherkotlin.utils.BUNDLE_WEATHER_DTO_KEY
+import geekbrains.android.myweatherkotlin.utils.YANDEX_API_KEY
+import okhttp3.*
+import java.io.IOException
 
 class DetailsFragment : Fragment() {
 
@@ -91,21 +90,29 @@ class DetailsFragment : Fragment() {
             builder.url("https://api.weather.yandex.ru/v2/informers?lat=${weatherLocal.city.latitude}&lon=${weatherLocal.city.longitude}")
             val request: Request = builder.build()
             val call: Call = client.newCall(request)
-            Thread {
-                val response = call.execute()
-                if (response.code in 200..299) {
-                    response.body?.let {
-                        val responseString = it.string()
-                        val weatherDTO = Gson().fromJson(responseString, WeatherDTO::class.java)
-                        weatherLocal.feelsLike = weatherDTO.fact.feelsLike
-                        weatherLocal.temperature = weatherDTO.fact.temp
-                        requireActivity().runOnUiThread {
-                            renderData(weatherLocal)
+            call.enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    Log.d("My_Log", "В момент запроса что-то пошло не так")
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    if (response.code in 200..299 && response.body != null) {
+                        response.body?.let {
+                            val responseString = it.string()
+                            val weatherDTO = Gson().fromJson(responseString, WeatherDTO::class.java)
+                            weatherLocal.feelsLike = weatherDTO.fact.feelsLike
+                            weatherLocal.temperature = weatherDTO.fact.temp
+                            requireActivity().runOnUiThread {
+                                renderData(weatherLocal)
+                            }
+                            Log.d("My_Log", "OkHttp ${responseString}")
                         }
-                        Log.d("My_Log", "${responseString}")
+                    } else {
+                        Log.d("My_Log", "Что-то пошло не так...")
                     }
                 }
-            }.start()
+
+            })
         }
     }
 
