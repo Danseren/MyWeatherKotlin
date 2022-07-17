@@ -13,13 +13,15 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.google.gson.Gson
+import geekbrains.android.myweatherkotlin.BuildConfig
 import geekbrains.android.myweatherkotlin.databinding.FragmentDetailsBinding
 import geekbrains.android.myweatherkotlin.domain.Weather
 import geekbrains.android.myweatherkotlin.model.dto.WeatherDTO
-import geekbrains.android.myweatherkotlin.utils.BUNDLE_CITY_KEY
-import geekbrains.android.myweatherkotlin.utils.BUNDLE_WEATHER_DTO_KEY
-import geekbrains.android.myweatherkotlin.utils.WAVE
-import geekbrains.android.myweatherkotlin.utils.WeatherLoader
+import geekbrains.android.myweatherkotlin.utils.*
+import okhttp3.Call
+import okhttp3.OkHttpClient
+import okhttp3.Request
 
 class DetailsFragment : Fragment() {
 
@@ -68,28 +70,42 @@ class DetailsFragment : Fragment() {
         }
         weather?.let { weatherLocal ->
             this.weatherLocal = weatherLocal
-            WeatherLoader.request(
-                weatherLocal.city.latitude,
-                weatherLocal.city.longitude,
-                object : OnResponse {
-                    override fun onResponse(weather: WeatherDTO) {
 
+//            LocalBroadcastManager.getInstance(requireContext()).registerReceiver(
+//                receiver, IntentFilter(
+//                    WAVE
+//                )
+//            )
+//
+//            requireActivity().startService(Intent(
+//                requireContext(),
+//                DetailsServiceIntent::class.java
+//            )
+//                .apply {
+//                    putExtra(BUNDLE_CITY_KEY, weatherLocal.city)
+//                })
+
+            val client = OkHttpClient()
+            val builder = Request.Builder()
+            builder.addHeader(YANDEX_API_KEY, BuildConfig.WEATHER_API_KEY)
+            builder.url("https://api.weather.yandex.ru/v2/informers?lat=${weatherLocal.city.latitude}&lon=${weatherLocal.city.longitude}")
+            val request: Request = builder.build()
+            val call: Call = client.newCall(request)
+            Thread {
+                val response = call.execute()
+                if (response.code in 200..299) {
+                    response.body?.let {
+                        val responseString = it.string()
+                        val weatherDTO = Gson().fromJson(responseString, WeatherDTO::class.java)
+                        weatherLocal.feelsLike = weatherDTO.fact.feelsLike
+                        weatherLocal.temperature = weatherDTO.fact.temp
+                        requireActivity().runOnUiThread {
+                            renderData(weatherLocal)
+                        }
+                        Log.d("My_Log", "${responseString}")
                     }
                 }
-            )
-            LocalBroadcastManager.getInstance(requireContext()).registerReceiver(
-                receiver, IntentFilter(
-                    WAVE
-                )
-            )
-
-            requireActivity().startService(Intent(
-                requireContext(),
-                DetailsServiceIntent::class.java
-            )
-                .apply {
-                    putExtra(BUNDLE_CITY_KEY, weatherLocal.city)
-                })
+            }.start()
         }
     }
 
