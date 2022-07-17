@@ -5,8 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import geekbrains.android.myweatherkotlin.databinding.FragmentWeatherListRecyclerItemBinding
-import geekbrains.android.myweatherkotlin.view.view.details.OnItemClick
 import geekbrains.android.myweatherkotlin.domain.Weather
+import geekbrains.android.myweatherkotlin.view.view.details.OnItemClick
 
 class DetailsListAdapter(private val dataList: List<Weather>, private val callback: OnItemClick) :
     RecyclerView.Adapter<DetailsListAdapter.WeatherViewHolder>() {

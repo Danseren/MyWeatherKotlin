@@ -35,26 +35,30 @@ class DetailsServiceIntent : IntentService("") {
                         myConnection = uri.openConnection() as HttpURLConnection
                         try {
                             myConnection.readTimeout = 5000
-                            myConnection.addRequestProperty(YANDEX_API_KEY, BuildConfig.WEATHER_API_KEY)
+                            myConnection.addRequestProperty(
+                                YANDEX_API_KEY,
+                                BuildConfig.WEATHER_API_KEY
+                            )
                             val reader = BufferedReader(InputStreamReader(myConnection.inputStream))
-                            val weatherDTO = Gson().fromJson(getLines(reader), WeatherDTO::class.java)
+                            val weatherDTO =
+                                Gson().fromJson(getLines(reader), WeatherDTO::class.java)
                             LocalBroadcastManager.getInstance(this).sendBroadcast(Intent().apply {
                                 putExtra(BUNDLE_WEATHER_DTO_KEY, weatherDTO)
                                 action = WAVE
                             })
-                        } catch (e : MalformedURLException) {
+                        } catch (e: MalformedURLException) {
                             Log.d("My_Log", "Поймали MalformedURLException")
-                        //Никакой особой обработки кроме как вывести в логи или Toast-ы я не придумал
-                        //По хорошему, наверное, стоит куда-то записывать какая ошибка когда и где произошла и куда-то эту информацию передавать
-                        } catch (e : IOException) {
+                            //Никакой особой обработки кроме как вывести в логи или Toast-ы я не придумал
+                            //По хорошему, наверное, стоит куда-то записывать какая ошибка когда и где произошла и куда-то эту информацию передавать
+                        } catch (e: IOException) {
                             Log.d("My_Log", "Поймали IOException")
-                        } catch (e : JsonSyntaxException) {
+                        } catch (e: JsonSyntaxException) {
                             Log.d("My_Log", "Поймали JsonSyntaxException")
                         } finally {
                             myConnection.disconnect()
                         }
                     }.start()
-            } catch (e : MalformedURLException) {
+                } catch (e: MalformedURLException) {
                     Log.d("My_Log", "Поймали MalformedURLException")
                 }
             }

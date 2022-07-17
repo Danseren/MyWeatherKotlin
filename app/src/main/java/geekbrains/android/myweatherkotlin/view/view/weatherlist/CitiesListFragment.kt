@@ -11,11 +11,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import geekbrains.android.myweatherkotlin.R
 import geekbrains.android.myweatherkotlin.databinding.FragmentWeatherListBinding
+import geekbrains.android.myweatherkotlin.domain.Weather
 import geekbrains.android.myweatherkotlin.view.view.details.DetailsFragment
 import geekbrains.android.myweatherkotlin.view.view.details.OnItemClick
-import geekbrains.android.myweatherkotlin.domain.Weather
-import geekbrains.android.myweatherkotlin.viewmodel.citieslist.CityListFragmentAppState
 import geekbrains.android.myweatherkotlin.viewmodel.citieslist.CitiesListViewModel
+import geekbrains.android.myweatherkotlin.viewmodel.citieslist.CityListFragmentAppState
 
 class CitiesListFragment : Fragment(), OnItemClick {
 
@@ -49,11 +49,12 @@ class CitiesListFragment : Fragment(), OnItemClick {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(CitiesListViewModel::class.java)
-        viewModel.getLiveData().observe(viewLifecycleOwner, object : Observer<CityListFragmentAppState> {
-            override fun onChanged(t: CityListFragmentAppState) {
-                renderData(t)
-            }
-        })
+        viewModel.getLiveData()
+            .observe(viewLifecycleOwner, object : Observer<CityListFragmentAppState> {
+                override fun onChanged(t: CityListFragmentAppState) {
+                    renderData(t)
+                }
+            })
 
         binding.weatherListFragmentFAB.setOnClickListener {
             isRussian = !isRussian
