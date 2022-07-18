@@ -8,6 +8,11 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import coil.load
+import coil.transform.CircleCropTransformation
+import com.bumptech.glide.Glide
+import com.squareup.picasso.Picasso
+import geekbrains.android.myweatherkotlin.R
 import geekbrains.android.myweatherkotlin.databinding.FragmentDetailsBinding
 import geekbrains.android.myweatherkotlin.domain.Weather
 import geekbrains.android.myweatherkotlin.viewmodel.details.DetailsFragmentAppState
@@ -65,6 +70,17 @@ class DetailsFragment : Fragment() {
                         detailsFragmentAppState.weatherData.fact.feelsLike.toString()
                     cityCoordinates.text =
                         "Широта:  ${weatherLocal.city.latitude}\nДолгота: ${weatherLocal.city.longitude}"
+                    icon.load("https://i.pinimg.com/originals/de/1f/6f/de1f6f936d497684c4a023dcde8576cc.jpg\n") {
+                        error(R.drawable.ic_russia)
+                        placeholder(R.drawable.ic_launcher_background)
+                        transformations(CircleCropTransformation())
+                    }
+
+//                    Glide.with(this.root)
+//                        .load("https://freepngimg.com/thumb/city/36275-3-city-hd.png").into(icon)
+
+//                    Picasso.get().load("https://freepngimg.com/thumb/city/36275-3-city-hd.png")
+//                        .into(icon)
                 }
             }
         }
