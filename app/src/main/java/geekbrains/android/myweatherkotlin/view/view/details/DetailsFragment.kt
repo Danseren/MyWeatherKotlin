@@ -5,10 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import coil.ImageLoader
+import coil.decode.SvgDecoder
 import coil.load
+import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.bumptech.glide.Glide
 import com.squareup.picasso.Picasso
@@ -70,22 +74,28 @@ class DetailsFragment : Fragment() {
                         detailsFragmentAppState.weatherData.fact.feelsLike.toString()
                     cityCoordinates.text =
                         "Широта:  ${weatherLocal.city.latitude}\nДолгота: ${weatherLocal.city.longitude}"
-                    icon.load("https://i.pinimg.com/originals/de/1f/6f/de1f6f936d497684c4a023dcde8576cc.jpg\n") {
-                        error(R.drawable.ic_russia)
-                        placeholder(R.drawable.ic_launcher_background)
-                        transformations(CircleCropTransformation())
-                    }
 
-//                    Glide.with(this.root)
-//                        .load("https://freepngimg.com/thumb/city/36275-3-city-hd.png").into(icon)
-
-//                    Picasso.get().load("https://freepngimg.com/thumb/city/36275-3-city-hd.png")
-//                        .into(icon)
+                    icon.loadUrl("https://yastatic.net/weather/i/icons/funky/dark/${detailsFragmentAppState.weatherData.fact.icon}.svg")
                 }
             }
         }
+    }
 
+    fun ImageView.loadUrl(url: String) {
+        val imageLoader = ImageLoader.Builder(this.context)
+            .components {
+                add(SvgDecoder.Factory())
+            }
+            .build()
 
+        val request = ImageRequest.Builder(this.context)
+            .crossfade(true)
+            .crossfade(500)
+            .data(url)
+            .target(this)
+            .build()
+
+        imageLoader.enqueue(request)
     }
 
     companion object {
