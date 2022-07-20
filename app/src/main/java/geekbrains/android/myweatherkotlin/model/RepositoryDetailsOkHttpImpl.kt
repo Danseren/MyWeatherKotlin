@@ -5,10 +5,11 @@ import com.google.gson.Gson
 import geekbrains.android.myweatherkotlin.BuildConfig
 import geekbrains.android.myweatherkotlin.model.dto.WeatherDTO
 import geekbrains.android.myweatherkotlin.utils.YANDEX_API_KEY
+import geekbrains.android.myweatherkotlin.utils.convertDtoToModel
 import okhttp3.*
 import java.io.IOException
 
-class RepositoryDetailsOkHttpImpl : RepositoryDetails {
+class RepositoryDetailsOkHttpImpl : RepositoryLocationToWeather {
     override fun getWeather(lat: Double, lon: Double, callback: TopCallback) {
 
         val client = OkHttpClient()
@@ -28,7 +29,7 @@ class RepositoryDetailsOkHttpImpl : RepositoryDetails {
                     response.body?.let {
                         val responseString = it.string()
                         val weatherDTO = Gson().fromJson(responseString, WeatherDTO::class.java)
-                        callback.onResponse(weatherDTO)
+                        callback.onResponse(convertDtoToModel(weatherDTO))
                     }
                 } else {
                     Log.d("My_Log", "Что-то пошло не так...")

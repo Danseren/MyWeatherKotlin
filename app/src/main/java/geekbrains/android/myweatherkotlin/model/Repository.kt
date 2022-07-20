@@ -1,15 +1,18 @@
 package geekbrains.android.myweatherkotlin.model
 
 import geekbrains.android.myweatherkotlin.domain.Weather
-import geekbrains.android.myweatherkotlin.model.dto.WeatherDTO
 import java.io.IOException
 
-fun interface RepositoryDetails {
+fun interface RepositoryLocationToWeather {
     fun getWeather(lat: Double, lon: Double, callback: TopCallback)
 }
 
+fun interface RepositoryWeatherAddable {
+    fun addWeather(weather: Weather)
+}
+
 interface TopCallback {
-    fun onResponse(weatherDTO: WeatherDTO)
+    fun onResponse(weather: Weather)
     fun onFailure(e: IOException)
 }
 

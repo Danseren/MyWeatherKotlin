@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import geekbrains.android.myweatherkotlin.domain.Weather
 import geekbrains.android.myweatherkotlin.model.*
 import geekbrains.android.myweatherkotlin.model.dto.WeatherDTO
 import geekbrains.android.myweatherkotlin.model.retrofit.RepositoryDetailsRetrofitImpl
@@ -12,7 +13,7 @@ import java.io.IOException
 class DetailsViewModel(private val liveData: MutableLiveData<DetailsFragmentAppState> = MutableLiveData<DetailsFragmentAppState>()) :
     ViewModel() {
 
-    lateinit var repository: RepositoryDetails
+    lateinit var repository: RepositoryLocationToWeather
 
     fun getLiveData(): MutableLiveData<DetailsFragmentAppState> {
         choiceRepository()
@@ -45,8 +46,8 @@ class DetailsViewModel(private val liveData: MutableLiveData<DetailsFragmentAppS
     }
 
     val callback = object : TopCallback {
-        override fun onResponse(weatherDTO: WeatherDTO) {
-            liveData.postValue(DetailsFragmentAppState.Success(weatherDTO))
+        override fun onResponse(weather: Weather) {
+            liveData.postValue(DetailsFragmentAppState.Success(weather))
             Handler(Looper.getMainLooper()).post {
 
             }

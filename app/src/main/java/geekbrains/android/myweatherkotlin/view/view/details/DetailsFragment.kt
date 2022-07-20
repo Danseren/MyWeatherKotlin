@@ -11,12 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import coil.ImageLoader
 import coil.decode.SvgDecoder
-import coil.load
 import coil.request.ImageRequest
-import coil.transform.CircleCropTransformation
-import com.bumptech.glide.Glide
-import com.squareup.picasso.Picasso
-import geekbrains.android.myweatherkotlin.R
 import geekbrains.android.myweatherkotlin.databinding.FragmentDetailsBinding
 import geekbrains.android.myweatherkotlin.domain.Weather
 import geekbrains.android.myweatherkotlin.viewmodel.details.DetailsFragmentAppState
@@ -69,13 +64,14 @@ class DetailsFragment : Fragment() {
             is DetailsFragmentAppState.Success -> {
                 with(binding) {
                     cityName.text = weatherLocal.city.name
-                    temperatureValue.text = detailsFragmentAppState.weatherData.fact.temp.toString()
+                    temperatureValue.text =
+                        detailsFragmentAppState.weatherData.temperature.toString()
                     feelsLikeLabel.text =
-                        detailsFragmentAppState.weatherData.fact.feelsLike.toString()
+                        detailsFragmentAppState.weatherData.feelsLike.toString()
                     cityCoordinates.text =
                         "Широта:  ${weatherLocal.city.latitude}\nДолгота: ${weatherLocal.city.longitude}"
 
-                    icon.loadUrl("https://yastatic.net/weather/i/icons/funky/dark/${detailsFragmentAppState.weatherData.fact.icon}.svg")
+                    icon.loadUrl("https://yastatic.net/weather/i/icons/funky/dark/${detailsFragmentAppState.weatherData.icon}.svg")
                 }
             }
         }
