@@ -10,3 +10,5 @@ const val WEATHER_API_RETROFIT = "/v2/informers"
 
 const val SHARED_PREFERENCE_NAME_IS_RU = "THIS IS RUSSIA"
 const val SHARED_PREFERENCE_KEY_IS_RU = "RUSSIAN KEY"
+
+const val ROOM_DB_NAME_WEATHER = "weather_db"

@@ -31,10 +31,7 @@ class MainActivity : AppCompatActivity() {
                 .commit()
         }
 
-        val sharedPreference = getSharedPreferences(SHARED_PREFERENCE_NAME_IS_RU, Context.MODE_PRIVATE)
-        val isRu = sharedPreference.getBoolean(SHARED_PREFERENCE_KEY_IS_RU, true)
-
-        val editor = sharedPreference.edit()
+        val rows = MyApp.getWeatherDatabase().weatherDao().getWeatherAll()
 
     }
 
