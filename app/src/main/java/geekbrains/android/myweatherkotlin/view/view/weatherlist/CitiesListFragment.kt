@@ -1,5 +1,6 @@
 package geekbrains.android.myweatherkotlin.view.view.weatherlist
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,6 +13,8 @@ import com.google.android.material.snackbar.Snackbar
 import geekbrains.android.myweatherkotlin.R
 import geekbrains.android.myweatherkotlin.databinding.FragmentWeatherListBinding
 import geekbrains.android.myweatherkotlin.domain.Weather
+import geekbrains.android.myweatherkotlin.utils.SHARED_PREFERENCE_KEY_IS_RU
+import geekbrains.android.myweatherkotlin.utils.SHARED_PREFERENCE_NAME_IS_RU
 import geekbrains.android.myweatherkotlin.view.view.details.DetailsFragment
 import geekbrains.android.myweatherkotlin.view.view.details.OnItemClick
 import geekbrains.android.myweatherkotlin.viewmodel.citieslist.CitiesListViewModel
@@ -32,11 +35,6 @@ class CitiesListFragment : Fragment(), OnItemClick {
         }
     lateinit var viewModel: CitiesListViewModel
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,6 +46,13 @@ class CitiesListFragment : Fragment(), OnItemClick {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val shPref = requireActivity().getSharedPreferences(
+            SHARED_PREFERENCE_NAME_IS_RU,
+            Context.MODE_PRIVATE
+        )
+        isRussian = shPref.getBoolean(SHARED_PREFERENCE_KEY_IS_RU, true)
+
         viewModel = ViewModelProvider(this).get(CitiesListViewModel::class.java)
         viewModel.getLiveData()
             .observe(viewLifecycleOwner, object : Observer<CityListFragmentAppState> {
@@ -65,8 +70,17 @@ class CitiesListFragment : Fragment(), OnItemClick {
                 viewModel.getWeatherListForEurope()
                 binding.weatherListFragmentFAB.setImageResource(R.drawable.ic_russia)
             }
+
+            shPref.edit().apply() {
+                putBoolean(SHARED_PREFERENCE_KEY_IS_RU, isRussian)
+                apply()
+            }
         }
-        viewModel.getWeatherListForRussia()
+        if (isRussian) {
+            viewModel.getWeatherListForRussia()
+        } else {
+            viewModel.getWeatherListForEurope()
+        }
     }
 
     private fun renderData(cityListFragmentAppState: CityListFragmentAppState) {
@@ -81,17 +95,16 @@ class CitiesListFragment : Fragment(), OnItemClick {
                 ) { v: View ->
                     if (isRussian) {
                         viewModel.getWeatherListForRussia()
+                        binding.weatherListFragmentFAB.setImageResource(R.drawable.ic_europe)
                     } else {
                         viewModel.getWeatherListForEurope()
+                        binding.weatherListFragmentFAB.setImageResource(R.drawable.ic_russia)
                     }
                 }
             }
             CityListFragmentAppState.Loading -> {
                 Log.d("My_Log", "Loading")
 
-                //работа функции высшего порядка
-                Log.d("My_Log", mathSum(10) { it * it }.toString())
-                Log.d("My_Log", mathSum(10, ::fibonacci).toString())
             }
             is CityListFragmentAppState.SuccessSingle -> {
                 val result = cityListFragmentAppState.weatherData
@@ -122,22 +135,9 @@ class CitiesListFragment : Fragment(), OnItemClick {
             .commit()
     }
 
-    fun mathSum(length: Int, series: (Int) -> Int): Int {
-        var result = 0
-        for (i in 0..length) {
-            result += series(i)
-        }
-        return result
-    }
-
-    fun fibonacci(number: Int): Int {
-        if (number <= 0) {
-            return 0
-        }
-        if (number == 1 || number == 2) {
-            return 1
-        }
-        return fibonacci(number - 1) + fibonacci(number - 2)
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 }

@@ -1,14 +1,11 @@
 package geekbrains.android.myweatherkotlin
 
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.net.ConnectivityManager
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import geekbrains.android.myweatherkotlin.databinding.ActivityMainBinding
+import geekbrains.android.myweatherkotlin.utils.SHARED_PREFERENCE_KEY_IS_RU
+import geekbrains.android.myweatherkotlin.utils.SHARED_PREFERENCE_NAME_IS_RU
 import geekbrains.android.myweatherkotlin.view.view.weatherlist.CitiesListFragment
 
 class MainActivity : AppCompatActivity() {
@@ -34,6 +31,10 @@ class MainActivity : AppCompatActivity() {
                 .commit()
         }
 
+        val sharedPreference = getSharedPreferences(SHARED_PREFERENCE_NAME_IS_RU, Context.MODE_PRIVATE)
+        val isRu = sharedPreference.getBoolean(SHARED_PREFERENCE_KEY_IS_RU, true)
+
+        val editor = sharedPreference.edit()
 
     }
 
