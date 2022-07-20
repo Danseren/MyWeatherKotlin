@@ -34,32 +34,10 @@ class MainActivity : AppCompatActivity() {
                 .commit()
         }
 
-        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-        registerReceiver(networkStateReceiver, filter)
-    }
 
-    private var networkStateReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            val noConnection =
-                intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false)
-            if (!noConnection) {
-                onConnectionFound()
-            } else {
-                onConnectionLost()
-            }
-        }
-    }
-
-    fun onConnectionFound() {
-        Toast.makeText(this, "Connection found", Toast.LENGTH_LONG).show()
-    }
-
-    fun onConnectionLost() {
-        Toast.makeText(this, "Connection lost", Toast.LENGTH_LONG).show()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        unregisterReceiver(networkStateReceiver)
     }
 }
