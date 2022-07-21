@@ -49,7 +49,7 @@ class DetailsFragment : Fragment() {
         }
         weather?.let { weatherLocal ->
             this.weatherLocal = weatherLocal
-            viewModel.getWeather(weatherLocal.city.latitude, weatherLocal.city.longitude)
+            viewModel.getWeather(weatherLocal)
             viewModel.getLiveData().observe(viewLifecycleOwner) {
                 renderData(it)
             }

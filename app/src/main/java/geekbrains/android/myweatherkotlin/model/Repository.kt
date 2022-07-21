@@ -4,7 +4,7 @@ import geekbrains.android.myweatherkotlin.domain.Weather
 import java.io.IOException
 
 fun interface RepositoryLocationToWeather {
-    fun getWeather(lat: Double, lon: Double, callback: TopCallback)
+    fun getWeather(weather: Weather, callback: TopCallback)
 }
 
 fun interface RepositoryWeatherAddable {

@@ -6,16 +6,17 @@ import geekbrains.android.myweatherkotlin.domain.Weather
 import geekbrains.android.myweatherkotlin.model.room.WeatherEntity
 
 class RepositoryRoomImpl : RepositoryLocationToWeather, RepositoryWeatherAddable {
-    override fun getWeather(lat: Double, lon: Double, callback: TopCallback) {
+    override fun getWeather(weather: Weather, callback: TopCallback) {
         callback.onResponse(
-            MyApp.getWeatherDatabase().weatherDao().getWeatherByLocation(lat, lon).let {
-                convertHistoryEntityToWeather(it).last()
-            })
+            MyApp.getWeatherDatabase().weatherDao()
+                .getWeatherByLocation(weather.city.latitude, weather.city.longitude).let {
+                    convertHistoryEntityToWeather(it).last()
+                })
     }
 
     private fun convertHistoryEntityToWeather(entityList: List<WeatherEntity>): List<Weather> {
         return entityList.map {
-            Weather(City(it.name, it.lat, it.lon), it.temperature, it.feelsLike)
+            Weather(City(it.name + "LOAD ", it.lat, it.lon), it.temperature, it.feelsLike)
         }
     }
 
@@ -26,7 +27,7 @@ class RepositoryRoomImpl : RepositoryLocationToWeather, RepositoryWeatherAddable
     private fun convertWeatherToEntity(weather: Weather): WeatherEntity {
         return WeatherEntity(
             0,
-            weather.city.name,
+            weather.city.name + "SAVE ",
             weather.city.longitude,
             weather.city.longitude,
             weather.temperature,

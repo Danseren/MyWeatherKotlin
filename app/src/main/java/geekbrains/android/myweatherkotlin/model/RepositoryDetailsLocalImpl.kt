@@ -8,10 +8,10 @@ import geekbrains.android.myweatherkotlin.model.dto.Fact
 import geekbrains.android.myweatherkotlin.model.dto.WeatherDTO
 
 class RepositoryDetailsLocalImpl : RepositoryLocationToWeather {
-    override fun getWeather(lat: Double, lon: Double, callback: TopCallback) {
+    override fun getWeather(weather: Weather, callback: TopCallback) {
         val list = getEuropeCities().toMutableList()
         list.addAll(getRussianCities())
-        val response = list.filter { it.city.latitude == lat && it.city.longitude == lon }
+        val response = list.filter { it.city.latitude == weather.city.latitude && it.city.longitude == weather.city.longitude }
         callback.onResponse(response.first())
     }
 
