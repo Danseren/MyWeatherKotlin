@@ -12,3 +12,6 @@ const val SHARED_PREFERENCE_NAME_IS_RU = "THIS IS RUSSIA"
 const val SHARED_PREFERENCE_KEY_IS_RU = "RUSSIAN KEY"
 
 const val ROOM_DB_NAME_WEATHER = "weather_db"
+
+const val WEATHER_URL_YANDEX = "https://api.weather.yandex.ru/v2/informers?lat="
+const val API_WEATHER_YANDEX= "https://api.weather.yandex.ru"

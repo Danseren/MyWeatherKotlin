@@ -1,11 +1,11 @@
 package geekbrains.android.myweatherkotlin
 
-import android.content.Context
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import geekbrains.android.myweatherkotlin.databinding.ActivityMainBinding
-import geekbrains.android.myweatherkotlin.utils.SHARED_PREFERENCE_KEY_IS_RU
-import geekbrains.android.myweatherkotlin.utils.SHARED_PREFERENCE_NAME_IS_RU
+import geekbrains.android.myweatherkotlin.view.view.room.WeatherHistoryListFragment
 import geekbrains.android.myweatherkotlin.view.view.weatherlist.CitiesListFragment
 
 class MainActivity : AppCompatActivity() {
@@ -35,6 +35,26 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_screen_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+
+            R.id.menu_history -> {
+                supportFragmentManager.apply {
+                    beginTransaction()
+                        .replace(R.id.container, WeatherHistoryListFragment())
+                        .addToBackStack("")
+                        .commitAllowingStateLoss()
+                }
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
     override fun onDestroy() {
         super.onDestroy()
     }

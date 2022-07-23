@@ -4,7 +4,6 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import geekbrains.android.myweatherkotlin.domain.City
 import geekbrains.android.myweatherkotlin.domain.Weather
-import geekbrains.android.myweatherkotlin.domain.getDefaultCity
 import geekbrains.android.myweatherkotlin.model.dto.Fact
 import geekbrains.android.myweatherkotlin.model.dto.WeatherDTO
 import java.io.BufferedReader

@@ -25,7 +25,7 @@ class DetailsFragment : Fragment() {
             return _binding!!
         }
 
-    lateinit var weatherLocal: Weather
+    //lateinit var weatherLocal: Weather
 
     val viewModel by lazy {
         ViewModelProvider(this).get(DetailsViewModel::class.java)
@@ -47,12 +47,11 @@ class DetailsFragment : Fragment() {
         val weather = arguments?.let { arg ->
             arg.getParcelable<Weather>(BUNDLE_WEATHER_EXTRA)
         }
-        weather?.let { weatherLocal ->
-            this.weatherLocal = weatherLocal
-            viewModel.getWeather(weatherLocal)
+        weather?.let {
             viewModel.getLiveData().observe(viewLifecycleOwner) {
                 renderData(it)
             }
+            viewModel.getWeather(it.city)
         }
     }
 
@@ -63,13 +62,14 @@ class DetailsFragment : Fragment() {
             DetailsFragmentAppState.Loading -> {}
             is DetailsFragmentAppState.Success -> {
                 with(binding) {
-                    cityName.text = weatherLocal.city.name
+                    val weather = detailsFragmentAppState.weatherData
+                    cityName.text = weather.city.name
                     temperatureValue.text =
-                        detailsFragmentAppState.weatherData.temperature.toString()
+                        weather.temperature.toString()
                     feelsLikeLabel.text =
-                        detailsFragmentAppState.weatherData.feelsLike.toString()
+                        weather.feelsLike.toString()
                     cityCoordinates.text =
-                        "Широта:  ${weatherLocal.city.latitude}\nДолгота: ${weatherLocal.city.longitude}"
+                        "Широта:  ${weather.city.latitude}\nДолгота: ${weather.city.longitude}"
 
                     icon.loadUrl("https://yastatic.net/weather/i/icons/funky/dark/${detailsFragmentAppState.weatherData.icon}.svg")
                 }

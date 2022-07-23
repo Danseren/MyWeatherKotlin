@@ -1,14 +1,19 @@
 package geekbrains.android.myweatherkotlin.model
 
+import geekbrains.android.myweatherkotlin.domain.City
 import geekbrains.android.myweatherkotlin.domain.Weather
 import java.io.IOException
 
-fun interface RepositoryLocationToWeather {
-    fun getWeather(weather: Weather, callback: TopCallback)
+fun interface RepositoryWeatherByCity {
+    fun getWeather(city: City, callback: TopCallback)
 }
 
-fun interface RepositoryWeatherAddable {
+fun interface RepositoryWeatherSave {
     fun addWeather(weather: Weather)
+}
+
+fun interface RepositoryWeatherAvailable {
+    fun getWeatherAll(callback: CommonListWeatherCallback)
 }
 
 interface TopCallback {
@@ -16,8 +21,9 @@ interface TopCallback {
     fun onFailure(e: IOException)
 }
 
-fun interface RepositorySingle {
-    fun getWeather(lat: Double, lin: Double): Weather
+interface CommonListWeatherCallback {
+    fun onResponse(weather: List<Weather>)
+    fun onFailure(e: IOException)
 }
 
 fun interface RepositoryCitiesList {

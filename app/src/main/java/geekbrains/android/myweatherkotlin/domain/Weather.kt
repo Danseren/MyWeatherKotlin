@@ -48,4 +48,4 @@ fun getRussianCities(): List<Weather> {
     )
 }
 
-fun getDefaultCity() = City("Москва", 55.755826, 37.617299900000035)
+//fun getDefaultCity() = City("Москва", 55.755826, 37.617299900000035)

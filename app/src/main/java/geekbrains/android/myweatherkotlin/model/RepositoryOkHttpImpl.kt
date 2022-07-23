@@ -3,20 +3,22 @@ package geekbrains.android.myweatherkotlin.model
 import android.util.Log
 import com.google.gson.Gson
 import geekbrains.android.myweatherkotlin.BuildConfig
+import geekbrains.android.myweatherkotlin.domain.City
 import geekbrains.android.myweatherkotlin.domain.Weather
 import geekbrains.android.myweatherkotlin.model.dto.WeatherDTO
+import geekbrains.android.myweatherkotlin.utils.WEATHER_URL_YANDEX
 import geekbrains.android.myweatherkotlin.utils.YANDEX_API_KEY
 import geekbrains.android.myweatherkotlin.utils.bindDTOWithCity
 import okhttp3.*
 import java.io.IOException
 
-class RepositoryDetailsOkHttpImpl : RepositoryLocationToWeather {
-    override fun getWeather(weather: Weather, callback: TopCallback) {
+class RepositoryOkHttpImpl : RepositoryWeatherByCity {
+    override fun getWeather(city: City, callback: TopCallback) {
 
         val client = OkHttpClient()
         val builder = Request.Builder()
         builder.addHeader(YANDEX_API_KEY, BuildConfig.WEATHER_API_KEY)
-        builder.url("https://api.weather.yandex.ru/v2/informers?lat=${weather.city.latitude}&lon=${weather.city.longitude}")
+        builder.url("$WEATHER_URL_YANDEX${city.latitude}&lon=${city.longitude}")
         val request: Request = builder.build()
         val call: Call = client.newCall(request)
         call.enqueue(object : Callback {
@@ -30,7 +32,7 @@ class RepositoryDetailsOkHttpImpl : RepositoryLocationToWeather {
                     response.body?.let {
                         val responseString = it.string()
                         val weatherDTO = Gson().fromJson(responseString, WeatherDTO::class.java)
-                        callback.onResponse(bindDTOWithCity(weatherDTO, weather.city))
+                        callback.onResponse(bindDTOWithCity(weatherDTO, city))
                     }
                 } else {
                     Log.d("My_Log", "Что-то пошло не так...")

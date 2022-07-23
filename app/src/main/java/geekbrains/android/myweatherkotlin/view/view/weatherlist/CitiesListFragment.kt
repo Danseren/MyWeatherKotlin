@@ -11,7 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import geekbrains.android.myweatherkotlin.R
-import geekbrains.android.myweatherkotlin.databinding.FragmentWeatherListBinding
+import geekbrains.android.myweatherkotlin.databinding.FragmentCitiesListBinding
 import geekbrains.android.myweatherkotlin.domain.Weather
 import geekbrains.android.myweatherkotlin.utils.SHARED_PREFERENCE_KEY_IS_RU
 import geekbrains.android.myweatherkotlin.utils.SHARED_PREFERENCE_NAME_IS_RU
@@ -28,8 +28,8 @@ class CitiesListFragment : Fragment(), OnItemClick {
 
     var isRussian = true
 
-    private var _binding: FragmentWeatherListBinding? = null
-    private val binding: FragmentWeatherListBinding
+    private var _binding: FragmentCitiesListBinding? = null
+    private val binding: FragmentCitiesListBinding
         get() {
             return _binding!!
         }
@@ -40,7 +40,7 @@ class CitiesListFragment : Fragment(), OnItemClick {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentWeatherListBinding.inflate(inflater)
+        _binding = FragmentCitiesListBinding.inflate(inflater)
         return binding.root
     }
 
