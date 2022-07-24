@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import geekbrains.android.myweatherkotlin.databinding.ActivityMainBinding
+import geekbrains.android.myweatherkotlin.view.view.contentprovider.ContentProviderFragment
 import geekbrains.android.myweatherkotlin.view.view.room.WeatherHistoryListFragment
 import geekbrains.android.myweatherkotlin.view.view.weatherlist.CitiesListFragment
 
@@ -47,6 +48,15 @@ class MainActivity : AppCompatActivity() {
                 supportFragmentManager.apply {
                     beginTransaction()
                         .replace(R.id.container, WeatherHistoryListFragment())
+                        .addToBackStack("")
+                        .commitAllowingStateLoss()
+                }
+                true
+            }
+            R.id.menu_content_provider -> {
+                supportFragmentManager.apply {
+                    beginTransaction()
+                        .replace(R.id.container, (ContentProviderFragment()))
                         .addToBackStack("")
                         .commitAllowingStateLoss()
                 }
