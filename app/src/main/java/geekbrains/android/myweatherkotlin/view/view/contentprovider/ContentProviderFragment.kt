@@ -1,10 +1,11 @@
 package geekbrains.android.myweatherkotlin.view.view.contentprovider
 
 import android.Manifest
-import android.app.AlertDialog
+import android.annotation.SuppressLint
 import android.content.ContentResolver
+import android.content.Intent
 import android.content.pm.PackageManager
-import android.database.Cursor
+import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.util.Log
@@ -12,29 +13,32 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import geekbrains.android.myweatherkotlin.databinding.FragmantContentProviderBinding
+import geekbrains.android.myweatherkotlin.R
+import geekbrains.android.myweatherkotlin.databinding.FragmentContentProviderBinding
 
 class ContentProviderFragment : Fragment() {
 
-    private var _binding: FragmantContentProviderBinding? = null
-    private val binding: FragmantContentProviderBinding
+    private var _binding: FragmentContentProviderBinding? = null
+    private val binding: FragmentContentProviderBinding
         get() {
             return _binding!!
         }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmantContentProviderBinding.inflate(inflater)
+        _binding = FragmentContentProviderBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     private val REQUEST_CODE_READ_CONTACTS = 1984
+    private val REQUEST_CODE_CALL = 451
+    private var numberCurrent: String = "none"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -42,31 +46,26 @@ class ContentProviderFragment : Fragment() {
     }
 
     private fun checkPermission() {
-        val permissionResult =
-            ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_CONTACTS)
-        if (permissionResult == PackageManager.PERMISSION_GRANTED) {
-            getContacts()
-        } else if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
-            AlertDialog.Builder(requireContext())
-                .setTitle("Доступ к контактам")
-                .setMessage("Без Вашего разрешения, эта часть приложения работать НЕ БУДЕТ!")
-                .setPositiveButton("Предоставить доступ") { _, _ ->
-                    permissionRequest(Manifest.permission.READ_CONTACTS)
+        context?.let {
+            when {
+                ContextCompat.checkSelfPermission(
+                    it,
+                    Manifest.permission.READ_CONTACTS
+                ) == PackageManager.PERMISSION_GRANTED -> {
+                    getContacts()
                 }
-                .setNegativeButton("Не предоставлять доступ") { dialog, _ ->
-                    dialog.dismiss()
+                shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS) -> {
+                    showDialog()
                 }
-                .create()
-                .show()
-        } else {
-            permissionRequest(Manifest.permission.READ_CONTACTS)
-
+                else -> {
+                    myPermissionRequest()
+                }
+            }
         }
-        Log.d("My_Log", "$permissionResult")
     }
 
-    fun permissionRequest(permission: String) {
-        requestPermissions(arrayOf(permission), REQUEST_CODE_READ_CONTACTS)
+    private fun myPermissionRequest() {
+        requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS), REQUEST_CODE_READ_CONTACTS)
     }
 
     override fun onRequestPermissionsResult(
@@ -75,38 +74,108 @@ class ContentProviderFragment : Fragment() {
         grantResults: IntArray
     ) {
         if (requestCode == REQUEST_CODE_READ_CONTACTS) {
-            for (index in permissions.indices) {
-                if (permissions[index] == Manifest.permission.READ_CONTACTS
-                    && grantResults[index] == PackageManager.PERMISSION_GRANTED
-                ) {
+            when {
+                (grantResults[0] == PackageManager.PERMISSION_GRANTED) -> {
                     getContacts()
-                    Log.d("My_Log", "It's alive!")
+                }
+                shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS) -> {
+                    showDialog()
+                }
+                else -> {
+                    Log.d("My_Log", "Закончили")
+                }
+            }
+        } else if (requestCode == REQUEST_CODE_CALL) {
+            when {
+                (grantResults[0] == PackageManager.PERMISSION_GRANTED) -> {
+                    makeCall()
+                }
+                shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS) -> {
+                    showDialog()
+                }
+                else -> {
+                    makeCall()
                 }
             }
         }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun getContacts() {
-        val contentResolver: ContentResolver = requireContext().contentResolver
-        val cursorWithContacts: Cursor? = contentResolver.query(
-            ContactsContract.Contacts.CONTENT_URI,
-            null, null, null,
-            ContactsContract.Contacts.DISPLAY_NAME + " ASC"
-        )
-        cursorWithContacts?.let { cursor ->
-            for (i in 0 until cursor.count) {
-                cursor.moveToPosition(i)
-                val name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
-                binding.containerForContacts.addView(TextView(requireContext()).apply {
-                    text = name
-                    textSize = 25f
-                })
+        context?.let { it ->
+            val contentResolver = it.contentResolver
+            val cursor = contentResolver.query(
+                ContactsContract.Contacts.CONTENT_URI,
+                null,
+                null,
+                null,
+                ContactsContract.Contacts.DISPLAY_NAME + " ASC"
+            )
+            cursor?.let { cursor->
+                for (i in 0 until cursor.count) {
+                    cursor.moveToPosition(i)
+                    val name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
+                    val contactId =
+                        cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID))
+                    val number = getNumberFromId(contentResolver,contactId)
+                    addView(name, number)
+                }
             }
+            cursor?.close()
         }
-        cursorWithContacts?.close()
     }
 
+    private fun getNumberFromId(contentResolver: ContentResolver, contactId: String): String {
+        val phones = contentResolver.query(
+            ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = $contactId", null, null
+        )
+        var number: String = "none"
+        phones?.let { cursor ->
+            while (cursor.moveToNext()) {
+                number =
+                    cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+            }
+        }
+        return number
+    }
+
+    private fun addView(name: String, number: String) {
+        binding.containerForContacts.addView(TextView(requireContext()).apply {
+            text = "$name:$number"
+            textSize = 25f
+            setOnClickListener {
+                numberCurrent = number
+                makeCall()
+            }
+        })
+    }
+
+    private fun showDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.need_permission_header)
+            .setMessage(R.string.need_permission_text)
+            .setPositiveButton(R.string.need_permission_give) { _, _ ->
+                myPermissionRequest()
+            }
+            .setNegativeButton(R.string.need_permission_dont_give) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
+    }
+
+    private fun makeCall() {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.CALL_PHONE
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:$numberCurrent"))
+            startActivity(intent)
+        } else {
+            requestPermissions(arrayOf(Manifest.permission.CALL_PHONE), REQUEST_CODE_CALL)
+        }
+    }
 
     override fun onDestroy() {
         super.onDestroy()

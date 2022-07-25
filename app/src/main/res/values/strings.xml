@@ -8,5 +8,17 @@
     <string name="error">Error</string>
     <string name="reload">Reload</string>
     <string name="history">history</string>
+
     <string name="content_provider">content_provider</string>
+    <string name="need_permission_header">Дайте разрешение</string>
+    <string name="need_permission_text">Без Вашего разрешения, эта часть приложения работать НЕ БУДЕТ!!!</string>
+    <string name="need_permission_text_again">Зайдите в настройки и выдайте разрешения вручную, теперь только так, увы</string>
+    <string name="need_permission_give">Разрешаю</string>
+    <string name="need_permission_dont_give">Не разрешаю</string>
+
+    <string name="call">Позвонить</string>
+    <string name="home">Домашний</string>
+    <string name="mobile">Мобильный</string>
+    <string name="work">Рабочий</string>
+    <string name="other">Другой</string>
 </resources>
