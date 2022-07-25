@@ -1,6 +1,7 @@
 package geekbrains.android.myweatherkotlin.view.view.contentprovider
 
 import android.Manifest
+import android.app.AlertDialog
 import android.content.ContentResolver
 import android.content.pm.PackageManager
 import android.database.Cursor
@@ -44,8 +45,21 @@ class ContentProviderFragment : Fragment() {
             ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_CONTACTS)
         if (permissionResult == PackageManager.PERMISSION_GRANTED) {
             getContacts()
+        } else if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
+            AlertDialog.Builder(requireContext())
+                .setTitle("Доступ к контактам")
+                .setMessage("Без Вашего разрешения, эта часть приложения работать НЕ БУДЕТ!")
+                .setPositiveButton("Предоставить доступ") { _, _ ->
+                    permissionRequest(Manifest.permission.READ_CONTACTS)
+                }
+                .setNegativeButton("Не предоставлять доступ") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .create()
+                .show()
         } else {
-            permissionRequest(Manifest.permission.READ_CONTACTS)
+            getContacts()
+
         }
         Log.d("My_Log", "$permissionResult")
     }
