@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import geekbrains.android.myweatherkotlin.databinding.FragmantContentProviderBinding
@@ -58,7 +59,7 @@ class ContentProviderFragment : Fragment() {
                 .create()
                 .show()
         } else {
-            getContacts()
+            permissionRequest(Manifest.permission.READ_CONTACTS)
 
         }
         Log.d("My_Log", "$permissionResult")
@@ -93,6 +94,17 @@ class ContentProviderFragment : Fragment() {
             null, null, null,
             ContactsContract.Contacts.DISPLAY_NAME + " ASC"
         )
+        cursorWithContacts?.let { cursor ->
+            for (i in 0 until cursor.count) {
+                cursor.moveToPosition(i)
+                val name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
+                binding.containerForContacts.addView(TextView(requireContext()).apply {
+                    text = name
+                    textSize = 25f
+                })
+            }
+        }
+        cursorWithContacts?.close()
     }
 
 
