@@ -28,14 +28,14 @@ class RepositoryRoomImpl : RepositoryWeatherByCity, RepositoryWeatherSave, Repos
 
     private fun convertHistoryEntityToWeather(entityList: List<WeatherEntity>): List<Weather> {
         return entityList.map {
-            Weather(City(it.name + "LOAD ", it.lat, it.lon), it.temperature, it.feelsLike)
+            Weather(City(it.name, it.lat, it.lon), it.temperature, it.feelsLike)
         }
     }
 
     private fun convertWeatherToEntity(weather: Weather): WeatherEntity {
         return WeatherEntity(
             0,
-            weather.city.name + "SAVE ",
+            weather.city.name,
             weather.city.longitude,
             weather.city.longitude,
             weather.temperature,

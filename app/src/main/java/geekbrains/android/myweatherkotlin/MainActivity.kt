@@ -45,20 +45,30 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
 
             R.id.menu_history -> {
-                supportFragmentManager.apply {
-                    beginTransaction()
-                        .replace(R.id.container, WeatherHistoryListFragment())
-                        .addToBackStack("")
-                        .commitAllowingStateLoss()
+
+                val theOnlyOneHistoryFragment = supportFragmentManager.findFragmentByTag("history tag")
+
+                if (theOnlyOneHistoryFragment == null) {
+                    supportFragmentManager.apply {
+                        beginTransaction()
+                            .replace(R.id.container, WeatherHistoryListFragment(), "history tag")
+                            .addToBackStack("")
+                            .commitAllowingStateLoss()
+                    }
                 }
                 true
             }
             R.id.menu_content_provider -> {
-                supportFragmentManager.apply {
-                    beginTransaction()
-                        .replace(R.id.container, (ContentProviderFragment()))
-                        .addToBackStack("")
-                        .commitAllowingStateLoss()
+
+                val theOnlyOneProviderFragment = supportFragmentManager.findFragmentByTag("provider tag")
+
+                if (theOnlyOneProviderFragment == null) {
+                    supportFragmentManager.apply {
+                        beginTransaction()
+                            .replace(R.id.container, ContentProviderFragment(), "provider tag")
+                            .addToBackStack("")
+                            .commitAllowingStateLoss()
+                    }
                 }
                 true
             }
