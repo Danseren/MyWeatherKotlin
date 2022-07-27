@@ -7,23 +7,32 @@ import geekbrains.android.myweatherkotlin.model.room.WeatherEntity
 
 class RepositoryRoomImpl : RepositoryWeatherByCity, RepositoryWeatherSave, RepositoryWeatherAvailable {
     override fun getWeather(city: City, callback: TopCallback) {
-        callback.onResponse(
-            MyApp.getWeatherDatabase().weatherDao()
-                .getWeatherByLocation(city.latitude, city.longitude).let {
-                    convertHistoryEntityToWeather(it).last()
-                })
+        Thread {
+            callback.onResponse(
+                MyApp.getWeatherDatabase().weatherDao()
+                    .getWeatherByLocation(city.latitude, city.longitude).let {
+                        convertHistoryEntityToWeather(it).last()
+                    })
+        }.start()
+
     }
 
     override fun addWeather(weather: Weather) {
-        MyApp.getWeatherDatabase().weatherDao().insertRoom(convertWeatherToEntity(weather))
+        Thread {
+            MyApp.getWeatherDatabase().weatherDao().insertRoom(convertWeatherToEntity(weather))
+        }.start()
+
     }
 
     override fun getWeatherAll(callback: CommonListWeatherCallback) {
-        callback.onResponse(
-            convertHistoryEntityToWeather(
-                MyApp.getWeatherDatabase().weatherDao().getWeatherAll()
+        Thread {
+            callback.onResponse(
+                convertHistoryEntityToWeather(
+                    MyApp.getWeatherDatabase().weatherDao().getWeatherAll()
+                )
             )
-        )
+        }.start()
+
     }
 
     private fun convertHistoryEntityToWeather(entityList: List<WeatherEntity>): List<Weather> {

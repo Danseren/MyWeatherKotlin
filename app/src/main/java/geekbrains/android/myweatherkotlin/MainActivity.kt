@@ -31,9 +31,6 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.container, CitiesListFragment.newInstance())
                 .commit()
         }
-
-        val rows = MyApp.getWeatherDatabase().weatherDao().getWeatherAll()
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

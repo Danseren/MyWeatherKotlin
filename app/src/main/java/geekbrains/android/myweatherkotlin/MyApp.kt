@@ -1,9 +1,6 @@
 package geekbrains.android.myweatherkotlin
 
 import android.app.Application
-import android.os.Handler
-import android.os.HandlerThread
-import android.os.Looper
 import androidx.room.Room
 import geekbrains.android.myweatherkotlin.model.room.WeatherDatabse
 import geekbrains.android.myweatherkotlin.utils.ROOM_DB_NAME_WEATHER
@@ -21,13 +18,12 @@ class MyApp : Application() {
 
         fun getWeatherDatabase(): WeatherDatabse {
 
-            //Handler, Looper, Thread
             if (weatherDatabase == null) {
                     weatherDatabase = Room.databaseBuilder(
                         getMyApp(),
                         WeatherDatabse::class.java,
                         ROOM_DB_NAME_WEATHER
-                    ).allowMainThreadQueries().build()
+                    ).build()
                 }
           return weatherDatabase!!
         }
