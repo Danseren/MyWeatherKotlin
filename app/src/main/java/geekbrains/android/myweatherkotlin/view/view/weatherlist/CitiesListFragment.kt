@@ -1,11 +1,19 @@
 package geekbrains.android.myweatherkotlin.view.view.weatherlist
 
+import android.Manifest
+import android.app.AlertDialog
 import android.content.Context
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -35,6 +43,8 @@ class CitiesListFragment : Fragment(), OnItemClick {
         }
     lateinit var viewModel: CitiesListViewModel
 
+    private val REQUEST_CODE_LOCATION = 988
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -61,14 +71,14 @@ class CitiesListFragment : Fragment(), OnItemClick {
                 }
             })
 
-        binding.weatherListFragmentFAB.setOnClickListener {
+        binding.weatherListFragmentFABCities.setOnClickListener {
             isRussian = !isRussian
             if (isRussian) {
                 viewModel.getWeatherListForRussia()
-                binding.weatherListFragmentFAB.setImageResource(R.drawable.ic_europe)
+                binding.weatherListFragmentFABCities.setImageResource(R.drawable.ic_europe)
             } else {
                 viewModel.getWeatherListForEurope()
-                binding.weatherListFragmentFAB.setImageResource(R.drawable.ic_russia)
+                binding.weatherListFragmentFABCities.setImageResource(R.drawable.ic_russia)
             }
 
             shPref.edit().apply() {
@@ -81,6 +91,87 @@ class CitiesListFragment : Fragment(), OnItemClick {
         } else {
             viewModel.getWeatherListForEurope()
         }
+
+        binding.weatherListFragmentFABLocation.setOnClickListener {
+            checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
+
+    private fun getLocation() {
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            val locationManager =
+                requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+                locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    0L,
+                    100F,
+                    object : LocationListener {
+                        override fun onLocationChanged(location: Location) {
+                            Log.d("My_Log", "Координаты ${location.latitude} ${location.longitude}")
+                        }
+                    })
+            }
+        }
+    }
+
+    private fun permissionRequest(permission: String) {
+        requestPermissions(arrayOf(permission), REQUEST_CODE_LOCATION)
+    }
+
+    private fun checkPermission(permission: String) {
+        val permResult =
+            ContextCompat.checkSelfPermission(requireContext(), permission)
+        PackageManager.PERMISSION_GRANTED
+        if (permResult == PackageManager.PERMISSION_GRANTED) {
+            getLocation()
+        } else if (shouldShowRequestPermissionRationale(permission)) {
+            AlertDialog.Builder(requireContext())
+                .setTitle("Доступ к локации")
+                .setMessage("Объяснение Объяснение Объяснение Объяснение")
+                .setPositiveButton("Предоставить доступ") { _, _ ->
+                    permissionRequest(permission)
+                }
+                .setNegativeButton("Не надо") { dialog, _ -> dialog.dismiss() }
+                .create()
+                .show()
+        } else {
+            permissionRequest(permission)
+        }
+    }
+
+    /*
+    AlertDialog.Builder(requireContext())
+                    .setTitle(getString(R.string.dialog_rationale_title))
+                    .setMessage(getString(R.string.need_permission_text))
+                    .setPositiveButton(getString(R.string.need_permission_give)) { _, _ ->
+                        permissionRequest(permission)
+                    }
+                    .setNegativeButton(getString(R.string.need_permission_dont_give)) { dialog, _ -> dialog.dismiss() }
+                    .create()
+                    .show()
+     */
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == REQUEST_CODE_LOCATION) {
+            for (pIndex in permissions.indices) {
+                if (permissions[pIndex] == Manifest.permission.ACCESS_FINE_LOCATION
+                    && grantResults[pIndex] == PackageManager.PERMISSION_GRANTED
+                ) {
+                    getLocation()
+                    Log.d("My_Log", "OK!")
+                }
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun renderData(cityListFragmentAppState: CityListFragmentAppState) {
@@ -95,10 +186,10 @@ class CitiesListFragment : Fragment(), OnItemClick {
                 ) { v: View ->
                     if (isRussian) {
                         viewModel.getWeatherListForRussia()
-                        binding.weatherListFragmentFAB.setImageResource(R.drawable.ic_europe)
+                        binding.weatherListFragmentFABCities.setImageResource(R.drawable.ic_europe)
                     } else {
                         viewModel.getWeatherListForEurope()
-                        binding.weatherListFragmentFAB.setImageResource(R.drawable.ic_russia)
+                        binding.weatherListFragmentFABCities.setImageResource(R.drawable.ic_russia)
                     }
                 }
             }
