@@ -47,8 +47,6 @@ class CitiesListFragment : Fragment(), OnItemClick {
         }
     lateinit var viewModel: CitiesListViewModel
 
-    lateinit var locationManager: LocationManager
-
     private val REQUEST_CODE_LOCATION = 988
 
     override fun onCreateView(
@@ -109,38 +107,21 @@ class CitiesListFragment : Fragment(), OnItemClick {
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            val locationManager =
+                requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
             if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
                 locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,
-                    2000L,
-                    0F,
-                    locationListener
-                )
+                    0L,
+                    100F,
+                    object : LocationListener {
+                        override fun onLocationChanged(location: Location) {
+                            Log.d("My_Log", "Координаты ${location.latitude} ${location.longitude}")
+                        }
+                    })
             }
-//            else {
-//
-//            }
         }
-    }
-
-    private val locationListener = object : LocationListener {
-        override fun onLocationChanged(location: Location) {
-            Log.d("My_Log", "${location.latitude} ${location.longitude}")
-            getAddress(location)
-        }
-
-    }
-
-    fun getAddress(location: Location) {
-        val geocoder = Geocoder(context, Locale("ru_Ru"))
-        val time = measureTimeMillis {
-            Thread {
-                val address = geocoder.getFromLocation(location.latitude, location.longitude, 1)
-                onItemClick(Weather(City(address.first().locality, location.latitude, location.longitude)))
-            }.start()
-        }
-        Log.d("My_Log", "time: $time")
     }
 
     private fun permissionRequest(permission: String) {
@@ -230,7 +211,6 @@ class CitiesListFragment : Fragment(), OnItemClick {
     }
 
     override fun onItemClick(weather: Weather) {
-        locationManager.removeUpdates(locationListener)
         requireActivity().supportFragmentManager
             .beginTransaction()
             .hide(this)
