@@ -5,13 +5,18 @@ import geekbrains.android.myweatherkotlin.domain.City
 import geekbrains.android.myweatherkotlin.domain.Weather
 import geekbrains.android.myweatherkotlin.model.room.WeatherEntity
 
-class RepositoryRoomImpl : RepositoryWeatherByCity, RepositoryWeatherSave, RepositoryWeatherAvailable {
+class RepositoryRoomImpl : RepositoryWeatherByCity, RepositoryWeatherSave,
+    RepositoryWeatherAvailable {
     override fun getWeather(city: City, callback: TopCallback) {
         Thread {
             callback.onResponse(
                 MyApp.getWeatherDatabase().weatherDao()
                     .getWeatherByLocation(city.latitude, city.longitude).let {
-                        convertHistoryEntityToWeather(it).last()
+                        if (it.isNotEmpty()) {
+                            convertHistoryEntityToWeather(it).last()
+                        } else {
+                            Weather(city)
+                        }
                     })
         }.start()
 

@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -20,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import geekbrains.android.myweatherkotlin.R
 import geekbrains.android.myweatherkotlin.databinding.FragmentCitiesListBinding
+import geekbrains.android.myweatherkotlin.domain.City
 import geekbrains.android.myweatherkotlin.domain.Weather
 import geekbrains.android.myweatherkotlin.utils.SHARED_PREFERENCE_KEY_IS_RU
 import geekbrains.android.myweatherkotlin.utils.SHARED_PREFERENCE_NAME_IS_RU
@@ -27,6 +29,8 @@ import geekbrains.android.myweatherkotlin.view.view.details.DetailsFragment
 import geekbrains.android.myweatherkotlin.view.view.details.OnItemClick
 import geekbrains.android.myweatherkotlin.viewmodel.citieslist.CitiesListViewModel
 import geekbrains.android.myweatherkotlin.viewmodel.citieslist.CityListFragmentAppState
+import java.util.*
+import kotlin.system.measureTimeMillis
 
 class CitiesListFragment : Fragment(), OnItemClick {
 
@@ -42,6 +46,8 @@ class CitiesListFragment : Fragment(), OnItemClick {
             return _binding!!
         }
     lateinit var viewModel: CitiesListViewModel
+
+    lateinit var locationManager: LocationManager
 
     private val REQUEST_CODE_LOCATION = 988
 
@@ -103,21 +109,38 @@ class CitiesListFragment : Fragment(), OnItemClick {
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            val locationManager =
-                requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
             if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-
                 locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,
-                    0L,
-                    100F,
-                    object : LocationListener {
-                        override fun onLocationChanged(location: Location) {
-                            Log.d("My_Log", "Координаты ${location.latitude} ${location.longitude}")
-                        }
-                    })
+                    2000L,
+                    0F,
+                    locationListener
+                )
             }
+//            else {
+//
+//            }
         }
+    }
+
+    private val locationListener = object : LocationListener {
+        override fun onLocationChanged(location: Location) {
+            Log.d("My_Log", "${location.latitude} ${location.longitude}")
+            getAddress(location)
+        }
+
+    }
+
+    fun getAddress(location: Location) {
+        val geocoder = Geocoder(context, Locale("ru_Ru"))
+        val time = measureTimeMillis {
+            Thread {
+                val address = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+                onItemClick(Weather(City(address.first().locality, location.latitude, location.longitude)))
+            }.start()
+        }
+        Log.d("My_Log", "time: $time")
     }
 
     private fun permissionRequest(permission: String) {
@@ -132,12 +155,12 @@ class CitiesListFragment : Fragment(), OnItemClick {
             getLocation()
         } else if (shouldShowRequestPermissionRationale(permission)) {
             AlertDialog.Builder(requireContext())
-                .setTitle("Доступ к локации")
-                .setMessage("Объяснение Объяснение Объяснение Объяснение")
-                .setPositiveButton("Предоставить доступ") { _, _ ->
+                .setTitle(getString(R.string.dialog_rationale_title))
+                .setMessage(getString(R.string.need_permission_text))
+                .setPositiveButton(getString(R.string.need_permission_give)) { _, _ ->
                     permissionRequest(permission)
                 }
-                .setNegativeButton("Не надо") { dialog, _ -> dialog.dismiss() }
+                .setNegativeButton(getString(R.string.need_permission_dont_give)) { dialog, _ -> dialog.dismiss() }
                 .create()
                 .show()
         } else {
@@ -145,17 +168,6 @@ class CitiesListFragment : Fragment(), OnItemClick {
         }
     }
 
-    /*
-    AlertDialog.Builder(requireContext())
-                    .setTitle(getString(R.string.dialog_rationale_title))
-                    .setMessage(getString(R.string.need_permission_text))
-                    .setPositiveButton(getString(R.string.need_permission_give)) { _, _ ->
-                        permissionRequest(permission)
-                    }
-                    .setNegativeButton(getString(R.string.need_permission_dont_give)) { dialog, _ -> dialog.dismiss() }
-                    .create()
-                    .show()
-     */
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -218,6 +230,7 @@ class CitiesListFragment : Fragment(), OnItemClick {
     }
 
     override fun onItemClick(weather: Weather) {
+        locationManager.removeUpdates(locationListener)
         requireActivity().supportFragmentManager
             .beginTransaction()
             .hide(this)
