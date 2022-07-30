@@ -15,3 +15,9 @@ const val ROOM_DB_NAME_WEATHER = "weather_db"
 
 const val WEATHER_URL_YANDEX = "https://api.weather.yandex.ru/v2/informers?lat="
 const val API_WEATHER_YANDEX= "https://api.weather.yandex.ru"
+
+const val CHANNEL_HIGH_ID = "channel_high_id"
+const val NOTIFICATION_ID1 = 1
+
+const val NOTIFICATION_KEY_TITLE = "myTitle"
+const val NOTIFICATION_KEY_BODY = "myBody"
