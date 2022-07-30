@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageManager
-import android.location.Geocoder
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -21,7 +20,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import geekbrains.android.myweatherkotlin.R
 import geekbrains.android.myweatherkotlin.databinding.FragmentCitiesListBinding
-import geekbrains.android.myweatherkotlin.domain.City
 import geekbrains.android.myweatherkotlin.domain.Weather
 import geekbrains.android.myweatherkotlin.utils.SHARED_PREFERENCE_KEY_IS_RU
 import geekbrains.android.myweatherkotlin.utils.SHARED_PREFERENCE_NAME_IS_RU
@@ -29,8 +27,6 @@ import geekbrains.android.myweatherkotlin.view.view.details.DetailsFragment
 import geekbrains.android.myweatherkotlin.view.view.details.OnItemClick
 import geekbrains.android.myweatherkotlin.viewmodel.citieslist.CitiesListViewModel
 import geekbrains.android.myweatherkotlin.viewmodel.citieslist.CityListFragmentAppState
-import java.util.*
-import kotlin.system.measureTimeMillis
 
 class CitiesListFragment : Fragment(), OnItemClick {
 

@@ -4,7 +4,6 @@ import android.util.Log
 import com.google.gson.Gson
 import geekbrains.android.myweatherkotlin.BuildConfig
 import geekbrains.android.myweatherkotlin.domain.City
-import geekbrains.android.myweatherkotlin.domain.Weather
 import geekbrains.android.myweatherkotlin.model.dto.WeatherDTO
 import geekbrains.android.myweatherkotlin.utils.WEATHER_URL_YANDEX
 import geekbrains.android.myweatherkotlin.utils.YANDEX_API_KEY
