@@ -44,7 +44,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun pushNotification(title: String, body: String) {
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notification = NotificationCompat.Builder(this, CHANNEL_HIGH_ID).apply {
             setContentTitle(title)
             setContentText(body)
@@ -52,7 +53,11 @@ class MainActivity : AppCompatActivity() {
             priority = NotificationCompat.PRIORITY_HIGH
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channelHigh = NotificationChannel(CHANNEL_HIGH_ID, CHANNEL_HIGH_ID, NotificationManager.IMPORTANCE_HIGH)
+            val channelHigh = NotificationChannel(
+                CHANNEL_HIGH_ID,
+                CHANNEL_HIGH_ID,
+                NotificationManager.IMPORTANCE_HIGH
+            )
             channelHigh.description = "Канал для важных push-уведомлений"
             notificationManager.createNotificationChannel(channelHigh)
         }
@@ -69,7 +74,8 @@ class MainActivity : AppCompatActivity() {
 
             R.id.menu_history -> {
 
-                val theOnlyOneHistoryFragment = supportFragmentManager.findFragmentByTag("history tag")
+                val theOnlyOneHistoryFragment =
+                    supportFragmentManager.findFragmentByTag("history tag")
 
                 if (theOnlyOneHistoryFragment == null) {
                     supportFragmentManager.apply {
@@ -83,7 +89,8 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.menu_content_provider -> {
 
-                val theOnlyOneProviderFragment = supportFragmentManager.findFragmentByTag("provider tag")
+                val theOnlyOneProviderFragment =
+                    supportFragmentManager.findFragmentByTag("provider tag")
 
                 if (theOnlyOneProviderFragment == null) {
                     supportFragmentManager.apply {
