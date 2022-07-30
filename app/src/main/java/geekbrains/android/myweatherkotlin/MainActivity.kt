@@ -2,7 +2,9 @@ package geekbrains.android.myweatherkotlin
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
@@ -46,11 +48,23 @@ class MainActivity : AppCompatActivity() {
     private fun pushNotification(title: String, body: String) {
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        val notificationIntent = Intent(applicationContext, MainActivity::class.java)
+        notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+
+        val contentIntent = PendingIntent.getActivity(
+            this,
+            1,
+            notificationIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
         val notification = NotificationCompat.Builder(this, CHANNEL_HIGH_ID).apply {
             setContentTitle(title)
             setContentText(body)
             setSmallIcon(R.drawable.ic_kotlin_logo)
             priority = NotificationCompat.PRIORITY_HIGH
+            setContentIntent(contentIntent)
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channelHigh = NotificationChannel(
