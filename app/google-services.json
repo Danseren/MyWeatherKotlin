@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "411440801921",
+    "project_id": "myweatherkotlin",
+    "storage_bucket": "myweatherkotlin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:411440801921:android:161f2b9e9cfe34b3ce8580",
+        "android_client_info": {
+          "package_name": "geekbrains.android.myweatherkotlin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "411440801921-h6ma07b6o7peiuj7vlossus4cevcqads.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "geekbrains.android.myweatherkotlin",
+            "certificate_hash": "e16f12cf64f3633f2b1a4b08d96b393566668e9b"
+          }
+        },
+        {
+          "client_id": "411440801921-5qk0sl78jj13q3ofaqh5rupobhpp9nm9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7OLOcR6Fonxf2wdm4R1MSRHPSbT7HRqg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "411440801921-5qk0sl78jj13q3ofaqh5rupobhpp9nm9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

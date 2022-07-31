@@ -7,10 +7,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import geekbrains.android.myweatherkotlin.databinding.ActivityMainBinding
 import geekbrains.android.myweatherkotlin.utils.CHANNEL_HIGH_ID
 import geekbrains.android.myweatherkotlin.utils.NOTIFICATION_ID1
@@ -42,7 +45,15 @@ class MainActivity : AppCompatActivity() {
                 .commit()
         }
 
-        pushNotification("push-Title", "push-Body")
+        //pushNotification("push-Title", "push-Body")
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("My_Log", "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+            val token = task.result
+            Log.d("My_Log", "Token: $token")
+        })
     }
 
     private fun pushNotification(title: String, body: String) {
