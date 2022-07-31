@@ -45,7 +45,6 @@ class MainActivity : AppCompatActivity() {
                 .commit()
         }
 
-        //pushNotification("push-Title", "push-Body")
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 Log.w("My_Log", "Fetching FCM registration token failed", task.exception)
@@ -54,39 +53,6 @@ class MainActivity : AppCompatActivity() {
             val token = task.result
             Log.d("My_Log", "Token: $token")
         })
-    }
-
-    private fun pushNotification(title: String, body: String) {
-        val notificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        val notificationIntent = Intent(applicationContext, MainActivity::class.java)
-        notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-
-        val contentIntent = PendingIntent.getActivity(
-            this,
-            1,
-            notificationIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        val notification = NotificationCompat.Builder(this, CHANNEL_HIGH_ID).apply {
-            setContentTitle(title)
-            setContentText(body)
-            setSmallIcon(R.drawable.ic_kotlin_logo)
-            priority = NotificationCompat.PRIORITY_HIGH
-            setContentIntent(contentIntent)
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channelHigh = NotificationChannel(
-                CHANNEL_HIGH_ID,
-                CHANNEL_HIGH_ID,
-                NotificationManager.IMPORTANCE_HIGH
-            )
-            channelHigh.description = "Канал для важных push-уведомлений"
-            notificationManager.createNotificationChannel(channelHigh)
-        }
-        notificationManager.notify(NOTIFICATION_ID1, notification.build())
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
