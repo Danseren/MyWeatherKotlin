@@ -30,9 +30,23 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+
+        release {
+            Properties properties = new Properties()
+            properties.load(rootProject.file("password.properties").newDataInputStream())
+            def password = properties.getProperty("password")
+            storeFile file("release.jks")
+            storePassword = password
+            keyAlias 'gb_alias'
+            keyPassword =password
+        }
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
+            signingConfig = signingConfigs.release
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
