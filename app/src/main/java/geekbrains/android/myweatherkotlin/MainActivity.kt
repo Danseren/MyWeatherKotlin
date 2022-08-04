@@ -1,26 +1,18 @@
 package geekbrains.android.myweatherkotlin
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.NotificationCompat
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import geekbrains.android.myweatherkotlin.databinding.ActivityMainBinding
-import geekbrains.android.myweatherkotlin.utils.CHANNEL_HIGH_ID
-import geekbrains.android.myweatherkotlin.utils.NOTIFICATION_ID1
 import geekbrains.android.myweatherkotlin.view.view.contentprovider.ContentProviderFragment
 import geekbrains.android.myweatherkotlin.view.view.maps.MapsFragment
 import geekbrains.android.myweatherkotlin.view.view.room.WeatherHistoryListFragment
 import geekbrains.android.myweatherkotlin.view.view.weatherlist.CitiesListFragment
+import lesson12.VersionCodeFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -101,6 +93,20 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.apply {
                         beginTransaction()
                             .replace(R.id.container, MapsFragment(), "map tag")
+                            .addToBackStack("")
+                            .commitAllowingStateLoss()
+                    }
+                }
+                true
+            }
+            R.id.menu_version -> {
+
+                val versionCodeFragment = supportFragmentManager.findFragmentByTag("version tag")
+
+                if (versionCodeFragment == null) {
+                    supportFragmentManager.apply {
+                        beginTransaction()
+                            .replace(R.id.container, VersionCodeFragment(), "version tag")
                             .addToBackStack("")
                             .commitAllowingStateLoss()
                     }

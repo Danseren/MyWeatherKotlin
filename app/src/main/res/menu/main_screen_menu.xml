@@ -18,4 +18,8 @@
         android:icon="@android:drawable/ic_dialog_map"
         android:title="@string/maps"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_version"
+        android:title="@string/version"/>
 </menu>
