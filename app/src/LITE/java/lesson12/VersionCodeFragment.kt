@@ -13,7 +13,7 @@ import geekbrains.android.myweatherkotlin.databinding.FragmentVersionCodeBinding
 import geekbrains.android.myweatherkotlin.view.view.contentprovider.ContentProviderFragment
 import kotlinx.android.synthetic.main.fragment_version_code.*
 
-class VersionCodeFragment: Fragment() {
+class VersionCodeFragment : Fragment() {
 
     companion object {
         fun newInstance() = ContentProviderFragment()

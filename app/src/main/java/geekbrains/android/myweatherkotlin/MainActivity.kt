@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import geekbrains.android.myweatherkotlin.databinding.ActivityMainBinding
@@ -56,61 +57,19 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
 
             R.id.menu_history -> {
-
-                val theOnlyOneHistoryFragment =
-                    supportFragmentManager.findFragmentByTag("history tag")
-
-                if (theOnlyOneHistoryFragment == null) {
-                    supportFragmentManager.apply {
-                        beginTransaction()
-                            .replace(R.id.container, WeatherHistoryListFragment(), "history tag")
-                            .addToBackStack("")
-                            .commitAllowingStateLoss()
-                    }
-                }
+                startFragment(WeatherHistoryListFragment(), "history tag")
                 true
             }
             R.id.menu_content_provider -> {
-
-                val theOnlyOneProviderFragment =
-                    supportFragmentManager.findFragmentByTag("provider tag")
-
-                if (theOnlyOneProviderFragment == null) {
-                    supportFragmentManager.apply {
-                        beginTransaction()
-                            .replace(R.id.container, ContentProviderFragment(), "provider tag")
-                            .addToBackStack("")
-                            .commitAllowingStateLoss()
-                    }
-                }
+                startFragment(ContentProviderFragment(), "provider tag")
                 true
             }
             R.id.menu_google_maps -> {
-
-                val theOnlyOneProviderFragment = supportFragmentManager.findFragmentByTag("map tag")
-
-                if (theOnlyOneProviderFragment == null) {
-                    supportFragmentManager.apply {
-                        beginTransaction()
-                            .replace(R.id.container, MapsFragment(), "map tag")
-                            .addToBackStack("")
-                            .commitAllowingStateLoss()
-                    }
-                }
+                startFragment(MapsFragment(), "map tag")
                 true
             }
             R.id.menu_version -> {
-
-                val versionCodeFragment = supportFragmentManager.findFragmentByTag("version tag")
-
-                if (versionCodeFragment == null) {
-                    supportFragmentManager.apply {
-                        beginTransaction()
-                            .replace(R.id.container, VersionCodeFragment(), "version tag")
-                            .addToBackStack("")
-                            .commitAllowingStateLoss()
-                    }
-                }
+                startFragment(VersionCodeFragment(), "version tag")
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -119,5 +78,18 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+    }
+
+    private fun startFragment(fragemt: Fragment, tag: String) {
+        val newFragment = supportFragmentManager.findFragmentByTag(tag)
+
+        if (newFragment == null) {
+            supportFragmentManager.apply {
+                beginTransaction()
+                    .replace(R.id.container, fragemt, tag)
+                    .addToBackStack("")
+                    .commitAllowingStateLoss()
+            }
+        }
     }
 }

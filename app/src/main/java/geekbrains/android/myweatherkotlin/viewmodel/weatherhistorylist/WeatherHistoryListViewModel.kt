@@ -12,7 +12,6 @@ class WeatherHistoryListViewModel(private val liveData: MutableLiveData<WeatherH
     ViewModel() {
 
     lateinit var repository: RepositoryWeatherAvailable
-    //lateinit var repositoryOne: RepositoryOne
 
     fun getLiveData(): MutableLiveData<WeatherHistoryListFragmentAppState> {
         choiceRepository()
@@ -25,7 +24,6 @@ class WeatherHistoryListViewModel(private val liveData: MutableLiveData<WeatherH
 
 
     fun getAllHistory() {
-        //choiceRepository()
         liveData.value = WeatherHistoryListFragmentAppState.Loading
         repository.getWeatherAll(callback)
     }
