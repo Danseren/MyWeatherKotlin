@@ -15,6 +15,7 @@ import geekbrains.android.myweatherkotlin.view.view.room.WeatherHistoryListFragm
 import geekbrains.android.myweatherkotlin.view.view.weatherlist.CitiesListFragment
 import lesson12.VersionCodeFragment
 
+
 class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
